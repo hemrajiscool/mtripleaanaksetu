@@ -78,11 +78,11 @@ WATTAGE_PATTERN = re.compile(
 
 # Total Losses: e.g. "losses not exceeding 80W at 50%", "max total loss 270 W"
 LOSS_50_PATTERN = re.compile(
-    r"(?:total\s*loss(?:es)?|losses).*?(?:at\s*50%\s*load|50%\s*load).*?(?:not\s*exceeding|max|maximum|:)?\s*(\d+(?:\.\d+)?)\s*(?:W|watts?)",
+    r"(?:total\s*loss(?:es)?|losses)[^.\n]{0,80}?(?:at\s*50%\s*load|50%\s*load)[^.\n]{0,80}?(?:not\s*exceeding|max|maximum|:)?\s*(-?\d+(?:\.\d+)?)\s*(?:W|watts?)",
     re.IGNORECASE,
 )
 LOSS_100_PATTERN = re.compile(
-    r"(?:total\s*loss(?:es)?|losses).*?(?:at\s*100%\s*load|100%\s*load|full\s*load).*?(?:not\s*exceeding|max|maximum|:)?\s*(\d+(?:\.\d+)?)\s*(?:W|watts?)",
+    r"(?:total\s*loss(?:es)?|losses)[^.\n]{0,80}?(?:at\s*100%\s*load|100%\s*load|full\s*load)[^.\n]{0,80}?(?:not\s*exceeding|max|maximum|:)?\s*(-?\d+(?:\.\d+)?)\s*(?:W|watts?)",
     re.IGNORECASE,
 )
 

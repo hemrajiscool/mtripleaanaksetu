@@ -182,3 +182,94 @@ async def test_not_found_handling(api_client: AsyncClient):
     res_graph = await api_client.get(f"/api/graph/{missing_id}")
     assert res_graph.status_code == 404
     assert "not found" in res_graph.json()["detail"].lower()
+
+
+@pytest.mark.asyncio
+async def test_uncertain_finding_and_human_adjudication_flow(api_client: AsyncClient):
+    """
+    Verify complete Uncertainty Invariant & Human Adjudication Lifecycle:
+    1. Submit specification with an unresolvable standard citation (IS 77777:2025).
+    2. Engine deterministically abstains: flags UNCERTAIN + PENDING_REVIEW + ACTION_REQUIRED_REVIEW.
+    3. Human reviewer adjudicates via POST /api/audit/{id}/adjudicate (CONFIRMED_DEFECT).
+    4. State updates to VIOLATION, gate status transitions to TECHNICAL_DEFECT, digest resealed.
+    5. Human reviewer overrides to DISMISSED_CONFORMANT -> transitions to VERIFIED_CONFORMANT.
+    """
+    payload = {
+        "document_id": "TEST-ADJUDICATION-001",
+        "document_title": "Experimental Alloy Procurement",
+        "text": "Clause 1.0: Procurement of experimental structural steel alloy conforming strictly to IS 77777:2025.",
+    }
+
+    # Step 1: Submit audit
+    res = await api_client.post("/api/audit", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+
+    # Step 2: Verify UNCERTAIN state and ACTION_REQUIRED_REVIEW gate
+    assert data["gate_status"] == "ACTION_REQUIRED_REVIEW"
+    assert data["summary"]["pending_reviews"] == 1
+    assert len(data["findings"]) == 1
+
+    finding = data["findings"][0]
+    assert finding["decision_state"] == "UNCERTAIN"
+    assert finding["review_state"] == "PENDING_REVIEW"
+    assert finding["uncertainty_reason"] == "KNOWLEDGE_BASE_GAP"
+    assert "IS 77777:2025" in finding["detected_entity"]
+    original_digest = data["sha256_digest"]
+
+    # Step 3: Adjudicate as CONFIRMED_DEFECT
+    adj_payload = {
+        "finding_id": finding["finding_id"],
+        "review_state": "CONFIRMED_DEFECT",
+        "adjudicator_id": "Chief Engineer Adjudicator",
+        "adjudication_notes": "Standard IS 77777:2025 is ungrounded in the gazette. Flagged as non-conforming tender specification.",
+    }
+    adj_res = await api_client.post(f"/api/audit/{payload['document_id']}/adjudicate", json=adj_payload)
+    assert adj_res.status_code == 200
+    adj_data = adj_res.json()
+
+    assert adj_data["gate_status"] == "TECHNICAL_DEFECT"
+    assert adj_data["summary"]["pending_reviews"] == 0
+    adj_finding = adj_data["findings"][0]
+    assert adj_finding["review_state"] == "CONFIRMED_DEFECT"
+    assert adj_finding["decision_state"] == "VIOLATION"
+    assert adj_data["sha256_digest"] != original_digest  # Resealed!
+
+    # Step 4: Adjudicate as DISMISSED_CONFORMANT (e.g. valid departmental pilot exemption)
+    dismiss_payload = {
+        "finding_id": finding["finding_id"],
+        "review_state": "DISMISSED_CONFORMANT",
+        "adjudicator_id": "Director General BIS",
+        "adjudication_notes": "Granted statutory experimental pilot exemption under R&D directive.",
+    }
+    dis_res = await api_client.post(f"/api/audit/{payload['document_id']}/adjudicate", json=dismiss_payload)
+    assert dis_res.status_code == 200
+    dis_data = dis_res.json()
+
+    assert dis_data["gate_status"] == "VERIFIED_CONFORMANT"
+    assert dis_data["summary"]["pending_reviews"] == 0
+    dis_finding = dis_data["findings"][0]
+    assert dis_finding["review_state"] == "DISMISSED_CONFORMANT"
+    assert dis_finding["decision_state"] == "CONFORMANT"
+
+
+@pytest.mark.asyncio
+async def test_crlf_header_injection_in_pdf_download(api_client: AsyncClient):
+    """
+    Verify that adversarial document IDs containing CRLF or quotes cannot execute
+    HTTP Response Splitting or header injection.
+    """
+    # 1. Preseed audit with special document ID
+    payload = {
+        "document_id": "DOC-SPECIAL_TEST",
+        "text": "Clause 1.0: Concrete works conforming to IS 456:2000 for building foundations.",
+    }
+    await api_client.post("/api/audit", json=payload)
+
+    # 2. Request PDF download
+    res = await api_client.get("/api/dossier/DOC-SPECIAL_TEST/pdf")
+    assert res.status_code == 200
+    disposition = res.headers.get("content-disposition", "")
+    assert 'filename="Audit_Dossier_DOC-SPECIAL_TEST.pdf"' in disposition
+    assert "\r" not in disposition
+    assert "\n" not in disposition

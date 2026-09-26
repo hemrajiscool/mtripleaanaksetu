@@ -74,7 +74,7 @@ class AuditCache:
 
             # 2. Update persistent SQLite
             try:
-                payload = json.dumps(result.model_dump())
+                payload = json.dumps(result.model_dump(mode="json"))
                 with self.conn:
                     self.conn.execute(
                         """
@@ -100,7 +100,7 @@ class AuditCache:
             )
             row = cursor.fetchone()
             if row:
-                result = AuditResult(**json.loads(row["payload"]))
+                result = AuditResult.model_validate(json.loads(row["payload"]))
                 self._memory_cache[document_id] = result
                 if result.sha256_digest:
                     self._hash_to_id[result.sha256_digest] = document_id
@@ -123,7 +123,7 @@ class AuditCache:
             )
             row = cursor.fetchone()
             if row:
-                result = AuditResult(**json.loads(row["payload"]))
+                result = AuditResult.model_validate(json.loads(row["payload"]))
                 self._memory_cache[result.document_id] = result
                 self._hash_to_id[sha256_digest] = result.document_id
                 return result

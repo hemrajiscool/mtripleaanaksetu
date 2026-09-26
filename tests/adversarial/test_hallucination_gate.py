@@ -23,6 +23,7 @@ from maanaksetu.domain.states import (
     ParameterCondition,
     Severity,
     StandardStatus,
+    UncertaintyReason,
     ViolationType,
 )
 from maanaksetu.engine.discovery.resolver import StandardsResolver
@@ -48,7 +49,10 @@ async def test_hallucinated_standard_citations(memory_db: sqlite3.Connection):
     res = await pipeline.execute(source=hallucinated_text, document_id="DOC-HALLUCINATED")
 
     # Invariant: Fictitious standards cannot be VERIFIED_CONFORMANT
-    # All emitted findings (if any) must strictly reference knowledge base facts
+    assert res.gate_status == GateStatus.ACTION_REQUIRED_REVIEW
+    assert any(f.uncertainty_reason == UncertaintyReason.KNOWLEDGE_BASE_GAP for f in res.findings)
+
+    # All emitted findings must strictly reference knowledge base facts
     for f in res.findings:
         assert f.evidence is not None
         assert f.evidence.knowledge_fact_ref != ""

@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import datetime
+import re
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from pydantic import BaseModel, Field
 
 from maanaksetu.adapters.api.cache import AuditCache
 from maanaksetu.adapters.dossier import compile_dossier
-from maanaksetu.domain.models import AuditResult
-from maanaksetu.engine.orchestrator import AuditPipeline
+from maanaksetu.domain.models import AuditResult, Finding
+from maanaksetu.domain.states import DecisionState, ReviewState
+from maanaksetu.engine.orchestrator import AuditPipeline, compute_state_digest
 from maanaksetu.knowledge.graph import export_subgraph_for_flow
 
 router = APIRouter(prefix="/api", tags=["Audit Gateway"])
@@ -18,9 +20,9 @@ router = APIRouter(prefix="/api", tags=["Audit Gateway"])
 
 class AuditRequest(BaseModel):
     """Tender audit submission request payload."""
-    text: str = Field(..., description="Unstructured tender or specification text", min_length=1)
-    document_id: Optional[str] = Field(None, description="Optional custom document or tender ID")
-    document_title: Optional[str] = Field(None, description="Optional tender title")
+    text: str = Field(..., description="Unstructured tender or specification text", min_length=1, max_length=5_000_000)
+    document_id: Optional[str] = Field(None, description="Optional custom document or tender ID", max_length=120)
+    document_title: Optional[str] = Field(None, description="Optional tender title", max_length=255)
 
 
 class VerificationResponse(BaseModel):
@@ -32,7 +34,15 @@ class VerificationResponse(BaseModel):
     gate_status: Optional[str] = None
     generated_at: Optional[str] = None
     findings_count: int = 0
-    verification_authority: str = "Bureau of Indian Standards / MaanakSetu Sovereign Engine"
+    verification_authority: str = "Bureau of Indian Standards / Sovereign Standards Authority — MaanakSetu"
+
+
+class AdjudicationRequest(BaseModel):
+    """Human adjudication request to resolve an UNCERTAIN finding or record exception."""
+    finding_id: str = Field(..., description="Unique ID of the finding to adjudicate", min_length=1, max_length=120)
+    review_state: ReviewState = Field(..., description="Target adjudication state")
+    adjudicator_id: str = Field("Chief Regulatory Officer", description="Authority identity", min_length=1, max_length=120)
+    adjudication_notes: str = Field("", description="Justification or statutory rationale", max_length=2000)
 
 
 # Dependency accessors attached via app.state
@@ -118,15 +128,82 @@ async def download_dossier_pdf(
             detail=f"Dossier compilation failed: {str(e)}",
         )
 
+    safe_doc_id = re.sub(r"[^A-Za-z0-9_-]", "_", document_id)
     return Response(
         content=pdf_bytes,
         media_type="application/pdf",
         headers={
-            "Content-Disposition": f'inline; filename="Audit_Dossier_{document_id}.pdf"',
+            "Content-Disposition": f'inline; filename="Audit_Dossier_{safe_doc_id}.pdf"',
             "X-SHA256-Digest": result.sha256_digest,
             "X-Gate-Status": result.gate_status.value,
         },
     )
+
+
+@router.post(
+    "/audit/{document_id}/adjudicate",
+    response_model=AuditResult,
+    summary="Adjudicate Specification Finding",
+    description="Allows authorized standards authorities to resolve UNCERTAIN findings or record formal exceptions.",
+)
+async def adjudicate_finding(
+    document_id: str,
+    payload: AdjudicationRequest,
+    cache: AuditCache = Depends(get_cache),
+    pipeline: AuditPipeline = Depends(get_pipeline),
+) -> AuditResult:
+    result = cache.get_by_id(document_id)
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Document '{document_id}' not found.",
+        )
+
+    # Locate target finding
+    target_finding: Optional[Finding] = None
+    for f in result.findings:
+        if f.finding_id == payload.finding_id:
+            target_finding = f
+            break
+
+    if not target_finding:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Finding '{payload.finding_id}' not found in document '{document_id}'.",
+        )
+
+    # Apply adjudication state transition
+    target_finding.review_state = payload.review_state
+    if payload.review_state == ReviewState.CONFIRMED_DEFECT:
+        target_finding.decision_state = DecisionState.VIOLATION
+    elif payload.review_state in (ReviewState.DISMISSED_CONFORMANT, ReviewState.EXCEPTION_RECORDED):
+        target_finding.decision_state = DecisionState.CONFORMANT
+
+    clean_adjudicator = re.sub(r"[<>]", "", payload.adjudicator_id).strip() or "Regulatory Officer"
+    clean_notes = re.sub(r"[<>]", "", payload.adjudication_notes).strip()
+    if clean_notes:
+        target_finding.engineering_rationale += f" [Adjudication by {clean_adjudicator}: {clean_notes}]"
+
+    # Recompute gate status and discrete defect summary
+    new_gate, new_summary = pipeline.verifier._compute_gate_status_and_summary(
+        total_requirements=result.summary.total_requirements_evaluated,
+        findings=result.findings,
+    )
+    result.gate_status = new_gate
+    result.summary = new_summary
+
+    # Recompute cryptographic state digest with updated adjudication record
+    result.sha256_digest = compute_state_digest(
+        document_id=result.document_id,
+        segments=result.total_segments_analyzed,
+        findings=result.findings,
+        dependency_alerts=result.cascading_dependency_alerts,
+        gate_status=result.gate_status,
+    )
+
+    # Update cache with new adjudicated result
+    cache.set(result)
+    return result
 
 
 @router.get(
@@ -139,6 +216,12 @@ async def verify_audit_digest(
     sha256_digest: str,
     cache: AuditCache = Depends(get_cache),
 ) -> VerificationResponse:
+    if not re.match(r"^[a-fA-F0-9]{64}$", sha256_digest):
+        return VerificationResponse(
+            valid=False,
+            sha256_digest=sha256_digest,
+        )
+
     result = cache.get_by_digest(sha256_digest)
     if not result:
         return VerificationResponse(
@@ -174,16 +257,17 @@ async def get_document_graph(
             detail=f"Document '{document_id}' not found.",
         )
 
-    # Collect all cited and replacement standards
+    # Collect all cited and replacement standards that exist in the knowledge graph
     root_standards: List[str] = []
     for f in result.findings:
-        if f.detected_entity.startswith("IS"):
+        if f.detected_entity in pipeline.graph.nodes:
             root_standards.append(f.detected_entity)
-        if f.replacement_standard and f.replacement_standard.startswith("IS"):
+        if f.replacement_standard and f.replacement_standard in pipeline.graph.nodes:
             root_standards.append(f.replacement_standard)
 
     if not root_standards:
-        root_standards = ["IS 456:2000", "IS 1786:2008"]
+        defaults = ["IS 456:2000", "IS 1786:2008"]
+        root_standards = [s for s in defaults if s in pipeline.graph.nodes] or list(pipeline.graph.nodes)[:2]
 
     flow_data = export_subgraph_for_flow(pipeline.graph, root_standards=root_standards, max_depth=depth)
     return flow_data

@@ -175,3 +175,55 @@ async def test_massive_unstructured_boilerplate_isolation(memory_db: sqlite3.Con
     # Sub-second execution invariant
     total_ms = res.execution_telemetry["total_execution_ms"]
     assert total_ms < 2000.0, f"Massive document took {total_ms}ms, expected sub-2000ms."
+
+
+@pytest.mark.asyncio
+async def test_fts5_operator_injection_resilience(memory_db: sqlite3.Connection):
+    """
+    Verify FTS5 search handles malicious operator sequences like AND, OR, NOT, NEAR,
+    unmatched quotes, and punctuation without throwing SQLite syntax errors.
+    """
+    from maanaksetu.knowledge.repository import search_standards_fts
+
+    malicious_queries = [
+        "AND OR NOT NEAR",
+        "cement AND NOT (concrete OR steel)",
+        '"""unmatched quotes"""',
+        "***???---+++",
+        "NEAR/3 (transformer, loss)",
+        "OR OR OR",
+    ]
+    for q in malicious_queries:
+        # Must execute cleanly without unhandled OperationalError
+        results = search_standards_fts(memory_db, q)
+        assert isinstance(results, list)
+
+
+def test_domain_agnostic_citation_extraction():
+    """
+    Verify domain-agnostic standard citation extraction correctly captures
+    IS, ISO, IEC, ASTM, EN, and IRC standards, while ignoring non-standard abbreviations like ISI mark.
+    """
+    from maanaksetu.engine.discovery.exact import extract_standard_citations
+
+    sample_text = (
+        "Project specifications:\n"
+        "1. Concrete structural design: IS 456:2000 and EN 1992-1-1:2004.\n"
+        "2. Steel reinforcement: ASTM A615:2020 and IS 1786:2008.\n"
+        "3. Quality management: ISO 9001:2015 and ISO/IEC 27001:2022.\n"
+        "4. Power transformer: IEC 60076-1:2011.\n"
+        "5. Bridge design: IRC:112:2020.\n"
+        "6. Mandatory compliance: bearing BIS ISI certification mark."
+    )
+
+    extracted = extract_standard_citations(sample_text)
+
+    assert "IS 456:2000" in extracted
+    assert "IS 1786:2008" in extracted
+    assert "ISO 9001:2015" in extracted
+    assert "ASTM A615:2020" in extracted
+    assert "IEC 60076-1:2011" in extracted
+    assert "IRC:112:2020" in extracted
+    # ISI mark is a certification mark, NOT a standard code
+    assert "ISI" not in extracted
+

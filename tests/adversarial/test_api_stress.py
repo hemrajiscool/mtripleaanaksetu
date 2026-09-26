@@ -116,3 +116,41 @@ async def test_high_throughput_cache_replay_performance(api_client: AsyncClient)
         res = await api_client.get(f"/api/audit/{doc_id}")
         assert res.status_code == 200
         assert res.json()["document_id"] == doc_id
+
+
+@pytest.mark.asyncio
+async def test_invalid_content_length_header_handling(api_client: AsyncClient):
+    """Verify that requests with malformed or negative Content-Length headers are handled cleanly with 400/413."""
+    res_str = await api_client.post(
+        "/api/audit",
+        content=b"test",
+        headers={"content-length": "not-an-integer"},
+    )
+    assert res_str.status_code == 400
+    assert "Invalid Content-Length" in res_str.json()["detail"]
+
+    res_neg = await api_client.post(
+        "/api/audit",
+        content=b"test",
+        headers={"content-length": "-100"},
+    )
+    assert res_neg.status_code == 413
+
+
+@pytest.mark.asyncio
+async def test_digest_verification_invalid_hash_format(api_client: AsyncClient):
+    """Verify that malformed or non-hex digest queries to /api/verify return valid=False immediately."""
+    for malformed_digest in [
+        "not-a-hash",
+        "12345",
+        "etc_passwd",
+        "' OR '1'='1",
+        "g" * 64,  # 'g' is not valid hex
+        "A" * 65,  # too long
+    ]:
+        res = await api_client.get(f"/api/verify/{malformed_digest}")
+        assert res.status_code == 200
+        data = res.json()
+        assert data["valid"] is False
+        assert data["sha256_digest"] == malformed_digest
+

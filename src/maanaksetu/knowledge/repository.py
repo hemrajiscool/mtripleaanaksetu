@@ -427,7 +427,8 @@ def search_standards_fts(conn: sqlite3.Connection, query: str, limit: int = 5) -
     clean_words = [w for w in "".join(c if c.isalnum() else " " for c in query).split() if len(w) > 2]
     if not clean_words:
         return []
-    fts_query = " OR ".join(clean_words)
+    # Quote each term individually so FTS operators like AND, OR, NOT cannot inject syntax errors
+    fts_query = " OR ".join(f'"{w}"' for w in clean_words)
     try:
         cursor = conn.execute(
             """

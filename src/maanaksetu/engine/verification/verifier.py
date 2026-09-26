@@ -23,10 +23,20 @@ from maanaksetu.domain.models import (
     Requirement,
     StandardEdition,
 )
-from maanaksetu.domain.states import DecisionState, GateStatus, ReviewState, Severity, StandardStatus, ViolationType
+from maanaksetu.domain.states import (
+    DecisionState,
+    GateStatus,
+    ReviewState,
+    Severity,
+    StandardStatus,
+    UncertaintyReason,
+    ViolationType,
+)
+from maanaksetu.engine.discovery.exact import extract_is_codes
 from maanaksetu.engine.verification.brands import BrandsVerifier
 from maanaksetu.engine.verification.constraints import ConstraintsVerifier
 from maanaksetu.engine.verification.dependencies import DependenciesVerifier
+from maanaksetu.engine.verification.evidence_builder import EvidenceBuilder
 from maanaksetu.engine.verification.lifecycle import LifecycleVerifier
 from maanaksetu.engine.verification.regulatory import RegulatoryVerifier
 from maanaksetu.engine.verification.scope import ScopeEvaluator
@@ -78,7 +88,45 @@ class SpecGuardVerifier:
         regulatory_findings = self.regulatory_verifier.verify(requirement, candidate_standards, already_flagged_obsolete=obsolete_segments)
         findings.extend(regulatory_findings)
 
-        # 6. Verify SpecGuard Invariants on every emitted finding
+        # 6. Citation Grounding & Resolution Gap Check (Uncertainty Invariant)
+        cited = requirement.cited_standards or extract_is_codes(requirement.raw_text)
+        resolved_codes = {s.is_number for s in candidate_standards}
+        for c in cited:
+            matched = any(c == r or c == r.split(":")[0] or c in r for r in resolved_codes)
+            if not matched and not get_standard_edition(self.db, c):
+                fid = f"FND-UNCERTAIN-{requirement.segment_id}-{c.replace(' ', '_').replace(':', '_')}"
+                evidence = EvidenceBuilder.build(
+                    finding_id=fid,
+                    rule_id="RULE-CITATION-RESOLUTION-GAP",
+                    knowledge_fact_ref="standards_catalog(UNRESOLVED)",
+                    requirement_ref=requirement.requirement_id,
+                    source_segment_ref=requirement.segment_id,
+                    statutory_or_technical_basis="Citation Resolution Policy (Authoritative Catalog Coverage)",
+                    fact_payload={"unresolved_citation": c},
+                    source_segment_text=requirement.raw_text,
+                )
+                findings.append(
+                    Finding(
+                        finding_id=fid,
+                        requirement_id=requirement.requirement_id,
+                        segment_id=requirement.segment_id,
+                        rule_id="RULE-CITATION-RESOLUTION-GAP",
+                        violation_type=ViolationType.ERR_UNRESOLVED_STANDARD,
+                        severity=Severity.MEDIUM,
+                        decision_state=DecisionState.UNCERTAIN,
+                        review_state=ReviewState.PENDING_REVIEW,
+                        uncertainty_reason=UncertaintyReason.KNOWLEDGE_BASE_GAP,
+                        detected_entity=c,
+                        statutory_basis="Citation Resolution Policy (Authoritative Catalog Coverage)",
+                        replacement_standard=None,
+                        recommended_remediation=f"Manual adjudication required: citation '{c}' is ungrounded in the authoritative standards catalog.",
+                        engineering_rationale=f"Clause {requirement.segment_id} cites standard '{c}', which does not exist in the active or superseded standards catalog. Halted in UNCERTAIN state.",
+                        segment_text=requirement.raw_text,
+                        evidence=evidence,
+                    )
+                )
+
+        # 7. Verify SpecGuard Invariants on every emitted finding
         for f in findings:
             self._assert_finding_invariants(f)
 
