@@ -19,8 +19,25 @@ OMNIROUTE_API_KEY = os.getenv("OMNIROUTE_API_KEY", "")
 TYPESAFE_BASE_URL = os.getenv("TYPESAFE_BASE_URL", "https://api.typesafe.ai/v1").rstrip("/")
 TYPESAFE_API_KEY = os.getenv("TYPESAFE_API_KEY", "")
 
-# Default model definitions
-OMNIROUTE_DEFAULT_EMBEDDING_MODEL = os.getenv("OMNIROUTE_EMBEDDING_MODEL", "jina-ai/jina-embeddings-v5-text-small")
-OMNIROUTE_DEFAULT_RERANKER_MODEL = os.getenv("OMNIROUTE_RERANKER_MODEL", "jina-ai/jina-reranker-v2-base-multilingual")
-OMNIROUTE_DEFAULT_CHAT_MODEL = os.getenv("OMNIROUTE_CHAT_MODEL", "gemini/gemini-2.5-flash")
+# Canonical OmniRoute Workload Abstractions (from OMNIROUTE_WORKLOAD_ENGINEERING_MANUAL.md)
+# Section 3: Never use raw provider model names or dynamic auto/* routes.
+# Always use the curated workload routes backed by Tier 1 Frontier models.
+OMNIROUTE_WORKLOAD_RAG_SYNTHESIS = "workload/rag-synthesis"  # Primary: Tier 1 agy/gemini-3.8-flash-high (1M+ context grounded QA)
+OMNIROUTE_WORKLOAD_REASONING = "workload/reasoning"          # Primary: Tier 1 agy/claude-opus-4-6-thinking (formal logic & deep scrutiny)
+OMNIROUTE_WORKLOAD_AGENT = "workload/agent"                  # Primary: Tier 1 agy/claude-sonnet-4-6 (autonomous tool execution)
+OMNIROUTE_WORKLOAD_CODING = "workload/coding"                # Primary: Tier 1 agy/claude-sonnet-4-6 (software engineering)
+OMNIROUTE_WORKLOAD_FAST = "workload/fast"                    # Primary: Tier 2 github/gpt-4o-mini (sub-second extraction & intent routing)
+OMNIROUTE_WORKLOAD_CHAT = "workload/chat"                    # Primary: Tier 1 agy/gemini-3.8-flash-high (low-TTFT conversational)
+
+# Native Cross-Encoder Rerank Model (/v1/rerank) - Highest benchmark precision per Manual Section 4
+OMNIROUTE_DEFAULT_RERANKER_MODEL = os.getenv("OMNIROUTE_RERANKER_MODEL", "voyage-ai/rerank-2.5")
+
+# Dense Vector Embedding Model (/v1/embeddings)
+OMNIROUTE_DEFAULT_EMBEDDING_MODEL = os.getenv("OMNIROUTE_EMBEDDING_MODEL", "voyage-ai/voyage-3.5-lite")
+
+# Default Executive Narrative & Synthesis Workload (Tier 1 Gemini 3.8 Flash High)
+OMNIROUTE_DEFAULT_CHAT_MODEL = os.getenv("OMNIROUTE_CHAT_MODEL", OMNIROUTE_WORKLOAD_RAG_SYNTHESIS)
+OMNIROUTE_DEFAULT_REASONING_MODEL = os.getenv("OMNIROUTE_REASONING_MODEL", OMNIROUTE_WORKLOAD_REASONING)
+
 TYPESAFE_DEFAULT_MODEL = os.getenv("TYPESAFE_MODEL", "jev-latest")
+

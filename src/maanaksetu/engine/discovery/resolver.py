@@ -120,6 +120,10 @@ class StandardsResolver:
         for res in rerank_results:
             doc_text = res.get("document", "")
             is_num = doc_map.get(doc_text)
+            if not is_num:
+                idx = res.get("index")
+                if idx is not None and 0 <= idx < len(documents):
+                    is_num = doc_map.get(documents[idx])
             if is_num:
                 ed = get_standard_edition(self.db, is_num)
                 if ed:

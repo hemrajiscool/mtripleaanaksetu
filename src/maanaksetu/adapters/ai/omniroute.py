@@ -17,7 +17,12 @@ from maanaksetu.adapters.ai.config import (
     OMNIROUTE_BASE_URL,
     OMNIROUTE_DEFAULT_CHAT_MODEL,
     OMNIROUTE_DEFAULT_EMBEDDING_MODEL,
+    OMNIROUTE_DEFAULT_REASONING_MODEL,
     OMNIROUTE_DEFAULT_RERANKER_MODEL,
+    OMNIROUTE_WORKLOAD_AGENT,
+    OMNIROUTE_WORKLOAD_FAST,
+    OMNIROUTE_WORKLOAD_RAG_SYNTHESIS,
+    OMNIROUTE_WORKLOAD_REASONING,
 )
 
 logger = logging.getLogger(__name__)
@@ -76,6 +81,28 @@ class OmniRouteClient:
             logger.warning(f"OmniRoute embeddings request failed: {e}")
             return []
 
+    @staticmethod
+    def _normalize_rerank_results(results: List[Dict[str, Any]], documents: List[str]) -> List[Dict[str, Any]]:
+        """Normalize rerank results across Voyage AI, Cohere, and Jina formats to ensure consistent string document output."""
+        normalized: List[Dict[str, Any]] = []
+        for item in results:
+            idx = item.get("index")
+            doc = item.get("document")
+            doc_str = ""
+            if isinstance(doc, str):
+                doc_str = doc
+            elif isinstance(doc, dict):
+                doc_str = doc.get("text", "")
+            elif idx is not None and 0 <= idx < len(documents):
+                doc_str = documents[idx]
+
+            normalized.append({
+                "index": idx,
+                "relevance_score": float(item.get("relevance_score", 0.0)),
+                "document": doc_str,
+            })
+        return normalized
+
     async def rerank(
         self,
         query: str,
@@ -105,7 +132,7 @@ class OmniRouteClient:
                 res = await client.post(endpoint, headers=self._headers(), json=payload)
                 if res.status_code == 200:
                     results = res.json().get("results", [])
-                    return results
+                    return self._normalize_rerank_results(results, documents)
                 logger.warning(f"OmniRoute rerank error: {res.status_code} {res.text[:150]}")
                 return []
         except Exception as e:
@@ -137,7 +164,8 @@ class OmniRouteClient:
             with httpx.Client(timeout=timeout) as client:
                 res = client.post(endpoint, headers=self._headers(), json=payload)
                 if res.status_code == 200:
-                    return res.json().get("results", [])
+                    results = res.json().get("results", [])
+                    return self._normalize_rerank_results(results, documents)
                 logger.warning(f"OmniRoute rerank error: {res.status_code} {res.text[:150]}")
                 return []
         except Exception as e:
@@ -150,7 +178,7 @@ class OmniRouteClient:
         gate_status: str,
         findings_summary: str,
         model: str = OMNIROUTE_DEFAULT_CHAT_MODEL,
-        timeout: float = 15.0,
+        timeout: float = 30.0,
     ) -> Optional[str]:
         """
         Generate an executive narrative summary for the final audit dossier.
@@ -193,3 +221,48 @@ class OmniRouteClient:
         except Exception as e:
             logger.warning(f"OmniRoute narrative generation failed: {e}")
             return None
+
+    async def reasoning_audit_analysis(
+        self,
+        context: str,
+        question: str,
+        model: str = OMNIROUTE_DEFAULT_REASONING_MODEL,
+        timeout: float = 60.0,
+    ) -> Optional[str]:
+        """
+        Deep architectural/logical scrutiny using Tier 1 Frontier reasoning workload (Claude Opus 4.6 Thinking).
+        Used for complex conflict analysis, regulatory edge cases, or deep ambiguity scrutiny.
+        """
+        if not self.is_configured:
+            return None
+
+        endpoint = f"{self.base_url}/chat/completions"
+        payload = {
+            "model": model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a Master Standards Regulatory Officer. "
+                        "Conduct rigorous, objective logical scrutiny of the standard and regulatory requirements."
+                    ),
+                },
+                {"role": "user", "content": f"Context:\n{context}\n\nRegulatory Inquiry:\n{question}"},
+            ],
+            "max_tokens": 1000,
+            "temperature": 0.1,
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                res = await client.post(endpoint, headers=self._headers(), json=payload)
+                if res.status_code == 200:
+                    choices = res.json().get("choices", [])
+                    if choices:
+                        return choices[0].get("message", {}).get("content", "").strip()
+                logger.warning(f"OmniRoute reasoning error: {res.status_code} {res.text[:150]}")
+                return None
+        except Exception as e:
+            logger.warning(f"OmniRoute reasoning request failed: {e}")
+            return None
+
