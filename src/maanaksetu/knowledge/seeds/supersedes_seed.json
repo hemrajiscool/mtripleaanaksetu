@@ -1,0 +1,47 @@
+[
+  {
+    "superseding_is": "IS 269:2015",
+    "superseded_is": "IS 269:1989",
+    "year": 2015
+  },
+  {
+    "superseding_is": "IS 269",
+    "superseded_is": "IS 269:1989",
+    "year": 2015
+  },
+  {
+    "superseding_is": "IS 335:2018",
+    "superseded_is": "IS 335:1993",
+    "year": 2018
+  },
+  {
+    "superseding_is": "IS 335",
+    "superseded_is": "IS 335:1993",
+    "year": 2018
+  },
+  {
+    "superseding_is": "IS 1180 (Part 1):2014",
+    "superseded_is": "IS 1180:1989",
+    "year": 2014
+  },
+  {
+    "superseding_is": "IS 1180 (Part 1)",
+    "superseded_is": "IS 1180:1989",
+    "year": 2014
+  },
+  {
+    "superseding_is": "IS 1180",
+    "superseded_is": "IS 1180:1989",
+    "year": 2014
+  },
+  {
+    "superseding_is": "IS 456:2000",
+    "superseded_is": "IS 456:1978",
+    "year": 2000
+  },
+  {
+    "superseding_is": "IS 456",
+    "superseded_is": "IS 456:1978",
+    "year": 2000
+  }
+]

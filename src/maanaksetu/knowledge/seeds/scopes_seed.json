@@ -1,0 +1,136 @@
+[
+  {
+    "is_number": "IS 456:2000",
+    "included_applications": [
+      "general_building",
+      "buildings",
+      "foundations",
+      "retaining_walls",
+      "structural_concrete",
+      "residential_commercial",
+      "civil_works"
+    ],
+    "excluded_applications": [
+      "highway_bridges",
+      "road_bridges",
+      "bridges",
+      "railway_bridges",
+      "road_pavements",
+      "prestressed_concrete"
+    ],
+    "governing_alternatives": {
+      "highway_bridges": "IRC:112:2020",
+      "road_bridges": "IRC:112:2020",
+      "bridges": "IRC:112:2020",
+      "railway_bridges": "IRS Concrete Bridge Code",
+      "road_pavements": "IRC:58:2015",
+      "prestressed_concrete": "IS 1343:2012"
+    },
+    "scope_notes": "IS 456 Clause 1.1 explicitly states: 'This code deals with the general structural use of plain and reinforced concrete... It does not cover the special requirements of structures such as bridges, chimneys, hydraulic structures, etc.'"
+  },
+  {
+    "is_number": "IS 456",
+    "included_applications": [
+      "general_building",
+      "buildings",
+      "foundations",
+      "retaining_walls",
+      "structural_concrete",
+      "residential_commercial",
+      "civil_works"
+    ],
+    "excluded_applications": [
+      "highway_bridges",
+      "road_bridges",
+      "bridges",
+      "railway_bridges",
+      "road_pavements",
+      "prestressed_concrete"
+    ],
+    "governing_alternatives": {
+      "highway_bridges": "IRC:112:2020",
+      "road_bridges": "IRC:112:2020",
+      "bridges": "IRC:112:2020",
+      "railway_bridges": "IRS Concrete Bridge Code",
+      "road_pavements": "IRC:58:2015",
+      "prestressed_concrete": "IS 1343:2012"
+    },
+    "scope_notes": "IS 456 Clause 1.1 explicitly excludes road bridges and highway structures. Highway concrete bridges are governed by IRC:112."
+  },
+  {
+    "is_number": "IS 269:2015",
+    "included_applications": [
+      "general_construction",
+      "structural_concrete",
+      "plain_concrete",
+      "precast_concrete",
+      "masonry_mortar",
+      "plastering"
+    ],
+    "excluded_applications": [
+      "high_sulfate_soil",
+      "marine_aggressive_environment",
+      "sewage_treatment"
+    ],
+    "governing_alternatives": {
+      "high_sulfate_soil": "IS 12330:1988",
+      "marine_aggressive_environment": "IS 12330:1988",
+      "sewage_treatment": "IS 12330:1988"
+    },
+    "scope_notes": "Covers Ordinary Portland Cement (OPC 33, 43, 53). For soil or groundwater containing >0.5% sulfates, Sulfate Resisting Portland Cement (IS 12330) is required."
+  },
+  {
+    "is_number": "IS 269",
+    "included_applications": [
+      "general_construction",
+      "structural_concrete",
+      "plain_concrete",
+      "precast_concrete",
+      "masonry_mortar",
+      "plastering"
+    ],
+    "excluded_applications": [
+      "high_sulfate_soil",
+      "marine_aggressive_environment",
+      "sewage_treatment"
+    ],
+    "governing_alternatives": {
+      "high_sulfate_soil": "IS 12330:1988",
+      "marine_aggressive_environment": "IS 12330:1988",
+      "sewage_treatment": "IS 12330:1988"
+    },
+    "scope_notes": "Covers Ordinary Portland Cement (OPC 33, 43, 53)."
+  },
+  {
+    "is_number": "IS 10322 (Part 5/Sec 3):2012",
+    "included_applications": [
+      "street_lighting",
+      "highway_illumination",
+      "roadway_lighting",
+      "outdoor_public_lighting"
+    ],
+    "excluded_applications": [
+      "indoor_office_lighting",
+      "underwater_lighting",
+      "hazardous_area_lighting"
+    ],
+    "governing_alternatives": {
+      "indoor_office_lighting": "IS 10322 (Part 5/Sec 1)",
+      "underwater_lighting": "IS 10322 (Part 5/Sec 8)"
+    },
+    "scope_notes": "Specifies requirements for luminaires for road and street lighting on supply voltages not exceeding 1 000 V."
+  },
+  {
+    "is_number": "IS 10322",
+    "included_applications": [
+      "street_lighting",
+      "highway_illumination",
+      "outdoor_public_lighting"
+    ],
+    "excluded_applications": [
+      "indoor_office_lighting"
+    ],
+    "governing_alternatives": {},
+    "scope_notes": "Luminaires specification."
+  }
+]
