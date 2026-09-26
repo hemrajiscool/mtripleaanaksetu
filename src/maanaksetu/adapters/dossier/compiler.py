@@ -27,25 +27,15 @@ def get_template_content() -> str:
 
 
 def compute_audit_digest(audit_result: AuditResult) -> str:
-    """Compute deterministic SHA-256 state digest for audit result integrity."""
-    canonical_repr = json.dumps(
-        {
-            "document_id": audit_result.document_id,
-            "gate_status": audit_result.gate_status.value,
-            "findings_count": len(audit_result.findings),
-            "findings": [
-                {
-                    "id": f.finding_id,
-                    "type": f.violation_type.value,
-                    "rule": f.rule_id,
-                    "severity": f.severity.value,
-                }
-                for f in sorted(audit_result.findings, key=lambda x: x.finding_id)
-            ],
-        },
-        sort_keys=True,
+    """Compute deterministic SHA-256 state digest using canonical orchestrator digest."""
+    from maanaksetu.engine.orchestrator import compute_state_digest
+    return compute_state_digest(
+        document_id=audit_result.document_id,
+        segments=audit_result.total_segments_analyzed,
+        findings=audit_result.findings,
+        dependency_alerts=audit_result.cascading_dependency_alerts,
+        gate_status=audit_result.gate_status,
     )
-    return hashlib.sha256(canonical_repr.encode("utf-8")).hexdigest()
 
 
 def compile_dossier(

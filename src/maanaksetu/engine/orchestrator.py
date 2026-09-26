@@ -39,27 +39,41 @@ from maanaksetu.knowledge.repository import init_db
 
 def compute_state_digest(
     document_id: str,
-    segments: List[DocumentSegment],
+    segments: Union[List[DocumentSegment], List[str], int],
     findings: List[Finding],
     dependency_alerts: List[DependencyAlert],
     gate_status: GateStatus,
 ) -> str:
     """Compute an immutable SHA-256 digest over the verified audit state."""
     hasher = hashlib.sha256()
+
+    if isinstance(segments, int):
+        seg_count = segments
+        seg_texts = []
+    elif segments and isinstance(segments[0], DocumentSegment):
+        seg_count = len(segments)
+        seg_texts = [s.raw_text for s in segments]
+    else:
+        seg_count = len(segments)
+        seg_texts = [str(s) for s in segments]
+
     payload = {
         "document_id": document_id,
         "gate_status": gate_status.value,
-        "segment_count": len(segments),
-        "segments": [s.raw_text for s in segments],
+        "segment_count": seg_count,
+        "segments": seg_texts,
         "findings": [
             {
                 "id": f.finding_id,
                 "type": f.violation_type.value,
                 "rule": f.rule_id,
                 "severity": f.severity.value,
+                "decision": f.decision_state.value,
+                "review": f.review_state.value,
                 "entity": f.detected_entity,
+                "replacement": f.replacement_standard or "",
             }
-            for f in sorted(findings, key=lambda x: x.finding_id)
+            for f in sorted(findings, key=lambda x: (x.finding_id, x.rule_id, x.violation_type.value))
         ],
         "alerts": [
             {

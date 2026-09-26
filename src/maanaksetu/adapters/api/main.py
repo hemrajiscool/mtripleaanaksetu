@@ -108,11 +108,19 @@ def create_app(db_path: Optional[str | Path] = None) -> FastAPI:
     async def limit_upload_size(request: Request, call_next):
         max_bytes = 10 * 1024 * 1024  # 10 MB limit
         content_length = request.headers.get("content-length")
-        if content_length and int(content_length) > max_bytes:
-            return JSONResponse(
-                status_code=status.HTTP_413_CONTENT_TOO_LARGE,
-                content={"detail": "Payload exceeds maximum allowed size (10 MB)."},
-            )
+        if content_length is not None:
+            try:
+                cl_val = int(content_length)
+                if cl_val > max_bytes or cl_val < 0:
+                    return JSONResponse(
+                        status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+                        content={"detail": "Payload exceeds maximum allowed size (10 MB)."},
+                    )
+            except ValueError:
+                return JSONResponse(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    content={"detail": "Invalid Content-Length header value."},
+                )
         return await call_next(request)
 
     # Include Routes
