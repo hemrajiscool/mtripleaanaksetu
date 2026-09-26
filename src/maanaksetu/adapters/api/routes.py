@@ -10,10 +10,11 @@ from pydantic import BaseModel, Field
 
 from maanaksetu.adapters.api.cache import AuditCache
 from maanaksetu.adapters.dossier import compile_dossier
-from maanaksetu.domain.models import AuditResult, Finding
+from maanaksetu.domain.models import AuditResult, Finding, StandardEdition
 from maanaksetu.domain.states import DecisionState, ReviewState
 from maanaksetu.engine.orchestrator import AuditPipeline, compute_state_digest
 from maanaksetu.knowledge.graph import export_subgraph_for_flow
+from maanaksetu.knowledge.repository import get_standard_edition, list_standards
 
 router = APIRouter(prefix="/api", tags=["Audit Gateway"])
 
@@ -271,6 +272,38 @@ async def get_document_graph(
 
     flow_data = export_subgraph_for_flow(pipeline.graph, root_standards=root_standards, max_depth=depth)
     return flow_data
+
+
+@router.get(
+    "/standards",
+    response_model=List[StandardEdition],
+    summary="List Standards Catalog",
+    description="Enumerates authoritative standards stored in the knowledge base.",
+)
+async def get_standards_catalog(
+    status: Optional[str] = Query(None, description="Optional status filter: ACTIVE, SUPERSEDED, WITHDRAWN"),
+    pipeline: AuditPipeline = Depends(get_pipeline),
+) -> List[StandardEdition]:
+    return list_standards(pipeline.db, status=status)
+
+
+@router.get(
+    "/standards/{is_number:path}",
+    response_model=StandardEdition,
+    summary="Get Standard Detail Knowledge Card",
+    description="Retrieves the complete authoritative standard specification, scope boundary, amendments, and constraints.",
+)
+async def get_standard_detail(
+    is_number: str,
+    pipeline: AuditPipeline = Depends(get_pipeline),
+) -> StandardEdition:
+    std = get_standard_edition(pipeline.db, is_number)
+    if not std:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Standard '{is_number}' not found in authoritative catalog.",
+        )
+    return std
 
 
 @router.get(

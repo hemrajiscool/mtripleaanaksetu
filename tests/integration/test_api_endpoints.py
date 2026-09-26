@@ -273,3 +273,55 @@ async def test_crlf_header_injection_in_pdf_download(api_client: AsyncClient):
     assert 'filename="Audit_Dossier_DOC-SPECIAL_TEST.pdf"' in disposition
     assert "\r" not in disposition
     assert "\n" not in disposition
+
+
+@pytest.mark.asyncio
+async def test_standards_catalog_and_detail_endpoints(api_client: AsyncClient):
+    """Verify standards catalog enumeration and detail knowledge card retrieval."""
+    # 1. Catalog list
+    cat_res = await api_client.get("/api/standards")
+    assert cat_res.status_code == 200
+    catalog = cat_res.json()
+    assert len(catalog) >= 10
+    is_numbers = [s["is_number"] for s in catalog]
+    assert "IS 456:2000" in is_numbers
+
+    # 2. Filter by status
+    active_res = await api_client.get("/api/standards?status=ACTIVE")
+    assert active_res.status_code == 200
+    active_catalog = active_res.json()
+    for s in active_catalog:
+        assert s["status"] == "ACTIVE"
+
+    # 3. Standard detail knowledge card
+    detail_res = await api_client.get("/api/standards/IS 456:2000")
+    assert detail_res.status_code == 200
+    detail = detail_res.json()
+    assert detail["is_number"] == "IS 456:2000"
+    assert detail["title"] != ""
+    assert detail["scope_boundary"] is not None
+    assert "bridges" in [app.lower() for app in detail["scope_boundary"]["excluded_applications"]]
+
+    # 4. Standard 404 handling
+    missing_res = await api_client.get("/api/standards/IS 99999:2099")
+    assert missing_res.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_audit_returns_structured_requirements(api_client: AsyncClient):
+    """Verify that POST /api/audit exposes structured requirements for UI consumers."""
+    payload = {
+        "document_id": "TEST-REQ-EXPOSURE-01",
+        "text": "Clause 1.0: Supply of Fe 500D steel rebar conforming to IS 1786:2008 with yield stress 500 MPa.",
+    }
+    res = await api_client.post("/api/audit", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+
+    assert "requirements" in data
+    assert len(data["requirements"]) >= 1
+    req = data["requirements"][0]
+    assert "product_name" in req
+    assert "IS 1786:2008" in req["cited_standards"] or "IS 1786" in req["cited_standards"]
+    assert req["segment_id"] != ""
+
