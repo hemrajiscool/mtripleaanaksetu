@@ -12,3 +12,4 @@ wheels/
 *.sqlite
 *.db
 *.pdf
+.env

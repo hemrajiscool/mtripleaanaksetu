@@ -96,10 +96,14 @@ class AuditPipeline:
         self,
         db: Optional[sqlite3.Connection] = None,
         graph: Optional[nx.DiGraph] = None,
+        omniroute_client: Optional[Any] = None,
+        typesafe_client: Optional[Any] = None,
     ):
         self.db = db if db is not None else init_db()
         self.graph = graph if graph is not None else load_normative_graph(self.db)
-        self.resolver = StandardsResolver(self.db)
+        self.omniroute = omniroute_client
+        self.typesafe = typesafe_client
+        self.resolver = StandardsResolver(self.db, omniroute_client=self.omniroute)
         self.verifier = SpecGuardVerifier(self.db, self.graph)
 
     async def execute(
@@ -206,9 +210,16 @@ async def run_pipeline(
     document_title: Optional[str] = None,
     db: Optional[sqlite3.Connection] = None,
     graph: Optional[nx.DiGraph] = None,
+    omniroute_client: Optional[Any] = None,
+    typesafe_client: Optional[Any] = None,
 ) -> AuditResult:
     """Convenience helper to instantiate and execute the audit pipeline."""
-    pipeline = AuditPipeline(db=db, graph=graph)
+    pipeline = AuditPipeline(
+        db=db,
+        graph=graph,
+        omniroute_client=omniroute_client,
+        typesafe_client=typesafe_client,
+    )
     return await pipeline.execute(
         source=source,
         document_id=document_id,

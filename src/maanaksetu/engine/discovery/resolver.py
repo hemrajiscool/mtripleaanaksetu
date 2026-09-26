@@ -33,8 +33,13 @@ class StandardsResolver:
         "structural_concrete": ["IS 456:2000"],
     }
 
-    def __init__(self, db: sqlite3.Connection):
+    def __init__(
+        self,
+        db: sqlite3.Connection,
+        omniroute_client: Optional[Any] = None,
+    ):
         self.db = db
+        self.omniroute = omniroute_client
 
     def resolve_candidates(self, requirement: Requirement) -> List[StandardEdition]:
         """
@@ -83,3 +88,42 @@ class StandardsResolver:
                     seen_codes.add(ed.is_number)
 
         return candidates
+
+    def resolve_candidates_semantic(
+        self,
+        requirement: Requirement,
+        candidate_pool: Optional[List[StandardEdition]] = None,
+        top_k: int = 3,
+    ) -> List[StandardEdition]:
+        """
+        Stage 2 (Semantic Extension): Use OmniRoute neural reranker to score candidate standards.
+        Falls back cleanly to lexical/taxonomy discovery if OmniRoute is unconfigured or returns empty.
+        """
+        if not self.omniroute or not getattr(self.omniroute, "is_configured", False):
+            return self.resolve_candidates(requirement)
+
+        if not candidate_pool:
+            cursor = self.db.execute("SELECT is_number, title FROM standards_catalog WHERE status = 'ACTIVE';")
+            catalog_rows = cursor.fetchall()
+            doc_map = {f"{r['is_number']}: {r['title']}": r['is_number'] for r in catalog_rows}
+        else:
+            doc_map = {f"{s.is_number}: {s.title}": s.is_number for s in candidate_pool}
+
+        documents = list(doc_map.keys())
+        rerank_results = self.omniroute.rerank_sync(
+            query=requirement.raw_text,
+            documents=documents,
+            top_n=top_k,
+        )
+
+        ranked_editions: List[StandardEdition] = []
+        for res in rerank_results:
+            doc_text = res.get("document", "")
+            is_num = doc_map.get(doc_text)
+            if is_num:
+                ed = get_standard_edition(self.db, is_num)
+                if ed:
+                    ranked_editions.append(ed)
+
+        return ranked_editions or self.resolve_candidates(requirement)
+

@@ -48,16 +48,25 @@ CURATED_DEMO_TENDERS = [
 
 
 def init_app_state(app: FastAPI, db_path: Optional[str | Path] = None) -> None:
-    """Initialize database, graph, pipeline, and cache on application state."""
+    """Initialize database, graph, pipeline, AI clients, and cache on application state."""
+    from maanaksetu.adapters.ai import default_omniroute_client, default_typesafe_client
+
     db = init_db(db_path)
     graph = load_normative_graph(db)
-    pipeline = AuditPipeline(db=db, graph=graph)
+    pipeline = AuditPipeline(
+        db=db,
+        graph=graph,
+        omniroute_client=default_omniroute_client,
+        typesafe_client=default_typesafe_client,
+    )
     cache = AuditCache()
 
     app.state.db = db
     app.state.graph = graph
     app.state.pipeline = pipeline
     app.state.cache = cache
+    app.state.omniroute = default_omniroute_client
+    app.state.typesafe = default_typesafe_client
 
 
 async def preseed_demo_tenders(app: FastAPI) -> None:
