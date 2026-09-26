@@ -262,6 +262,7 @@ class AuditResult(BaseModel):
     document_title: str = "Tender Compliance Audit"
     gate_status: GateStatus = GateStatus.VERIFIED_CONFORMANT
     total_segments_analyzed: int = 0
+    requirements: List[Requirement] = Field(default_factory=list)
     findings: List[Finding] = Field(default_factory=list)
     cascading_dependency_alerts: List[DependencyAlert] = Field(default_factory=list)
     summary: AuditSummary = Field(default_factory=AuditSummary)

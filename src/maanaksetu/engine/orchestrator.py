@@ -194,6 +194,7 @@ class AuditPipeline:
             document_title=doc_title,
             gate_status=gate_status,
             total_segments_analyzed=len(segments),
+            requirements=requirements,
             findings=findings,
             cascading_dependency_alerts=dependency_alerts,
             summary=summary,

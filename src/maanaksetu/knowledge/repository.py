@@ -444,3 +444,19 @@ def search_standards_fts(conn: sqlite3.Connection, query: str, limit: int = 5) -
         return [dict(r) for r in cursor.fetchall()]
     except Exception:
         return []
+
+
+def list_standards(conn: sqlite3.Connection, status: Optional[str] = None) -> List[StandardEdition]:
+    """Retrieve full list of standard editions from the authoritative catalog."""
+    if status:
+        cursor = conn.execute("SELECT is_number FROM standards_catalog WHERE status = ? ORDER BY is_number;", (status,))
+    else:
+        cursor = conn.execute("SELECT is_number FROM standards_catalog ORDER BY is_number;")
+
+    editions: List[StandardEdition] = []
+    for row in cursor.fetchall():
+        ed = get_standard_edition(conn, row["is_number"])
+        if ed:
+            editions.append(ed)
+    return editions
+
