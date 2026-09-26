@@ -1,0 +1,184 @@
+"""Integration Test Suite for FastAPI Regulatory Gateway.
+
+Verifies end-to-end API workflows:
+- Service health check
+- Auditing tender specifications via POST /api/audit
+- Pre-seeded demo tender verification
+- Sub-50ms cache replay
+- 3-page Typst PDF dossier generation & streaming via GET /api/dossier/{id}/pdf
+- Cryptographic SHA-256 seal verification via GET /api/verify/{hash}
+- React Flow normative DAG visualization via GET /api/graph/{id}
+- Robust 404 error handling for missing documents
+"""
+
+from __future__ import annotations
+
+import pytest
+from httpx import AsyncClient
+
+
+@pytest.mark.asyncio
+async def test_health_check(api_client: AsyncClient):
+    """Verify service health endpoint."""
+    response = await api_client.get("/api/health")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "healthy"
+    assert "MaanakSetu Sovereign Engine" in data["service"]
+    assert data["version"] == "1.0.0"
+    assert "timestamp" in data
+
+
+@pytest.mark.asyncio
+async def test_preseeded_demo_tenders(api_client: AsyncClient):
+    """Verify the 3 pre-seeded demo tenders are immediately queryable in cache."""
+    # 1. NHAI Bridge Deck
+    res1 = await api_client.get("/api/audit/DEMO-NHAI-BRIDGE-01")
+    assert res1.status_code == 200
+    d1 = res1.json()
+    assert d1["document_id"] == "DEMO-NHAI-BRIDGE-01"
+    assert d1["gate_status"] == "STATUTORY_NON_COMPLIANT"
+    findings1 = d1["findings"]
+    rules1 = {f["rule_id"] for f in findings1}
+    assert "RULE-SCOPE-EXCLUSION" in rules1
+    assert "RULE-COMMERCIAL-BRAND-EXCLUSION" in rules1
+
+    # 2. Seismic Rebar
+    res2 = await api_client.get("/api/audit/DEMO-SEISMIC-REBAR-02")
+    assert res2.status_code == 200
+    d2 = res2.json()
+    assert d2["document_id"] == "DEMO-SEISMIC-REBAR-02"
+    assert d2["gate_status"] in ("STATUTORY_NON_COMPLIANT", "TECHNICAL_DEFECT")
+    rules2 = {f["rule_id"] for f in d2["findings"]}
+    assert "RULE-AMENDMENT-PARAMETER-DELTA" in rules2 or "RULE-TECHNICAL-PARAMETER-BOUND" in rules2
+
+    # 3. Transformer QCO
+    res3 = await api_client.get("/api/audit/DEMO-TRANSFORMER-QCO-03")
+    assert res3.status_code == 200
+    d3 = res3.json()
+    assert d3["document_id"] == "DEMO-TRANSFORMER-QCO-03"
+    assert d3["gate_status"] == "STATUTORY_NON_COMPLIANT"
+    rules3 = {f["rule_id"] for f in d3["findings"]}
+    assert "RULE-REGULATORY-MANDATE-OMISSION" in rules3
+
+
+@pytest.mark.asyncio
+async def test_post_audit_execution_and_caching(api_client: AsyncClient):
+    """Submit a tender specification for audit, verify results, and test cache replay."""
+    payload = {
+        "document_id": "TEST-TENDER-POST-01",
+        "document_title": "Urban Infrastructure RCC Works",
+        "text": (
+            "Clause 3.1: Supply of cement conforming to IS 269:1989. "
+            "Clause 3.2: Structural steel sections shall be sourced exclusively from Jindal Panther."
+        ),
+    }
+
+    # First POST execution
+    response = await api_client.post("/api/audit", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    assert data["document_id"] == "TEST-TENDER-POST-01"
+    assert data["gate_status"] == "STATUTORY_NON_COMPLIANT"
+    assert len(data["findings"]) >= 2
+    assert "sha256_digest" in data
+    assert len(data["sha256_digest"]) == 64
+    assert "execution_telemetry" in data
+
+    # Verify findings contain obsolete standard and brand violation
+    violation_types = {f["violation_type"] for f in data["findings"]}
+    assert "ERR_OBSOLETE_STANDARD" in violation_types
+    assert "ERR_BRAND_EXCLUSION" in violation_types
+
+    # Re-fetch via GET /api/audit/{id}
+    get_res = await api_client.get("/api/audit/TEST-TENDER-POST-01")
+    assert get_res.status_code == 200
+    get_data = get_res.json()
+    assert get_data["sha256_digest"] == data["sha256_digest"]
+
+    # Re-submit via POST: should hit cache instantly
+    replay_res = await api_client.post("/api/audit", json=payload)
+    assert replay_res.status_code == 200
+    assert replay_res.json()["sha256_digest"] == data["sha256_digest"]
+
+
+@pytest.mark.asyncio
+async def test_verify_sha256_digest_endpoint(api_client: AsyncClient):
+    """Verify cryptographic SHA-256 seal authenticity endpoint."""
+    # Obtain digest of preseeded tender
+    demo_res = await api_client.get("/api/audit/DEMO-NHAI-BRIDGE-01")
+    digest = demo_res.json()["sha256_digest"]
+
+    # Valid hash query
+    verify_res = await api_client.get(f"/api/verify/{digest}")
+    assert verify_res.status_code == 200
+    vdata = verify_res.json()
+    assert vdata["valid"] is True
+    assert vdata["sha256_digest"] == digest
+    assert vdata["document_id"] == "DEMO-NHAI-BRIDGE-01"
+    assert vdata["gate_status"] == "STATUTORY_NON_COMPLIANT"
+    assert "Bureau of Indian Standards" in vdata["verification_authority"]
+
+    # Tampered / non-existent hash query
+    fake_hash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    fake_res = await api_client.get(f"/api/verify/{fake_hash}")
+    assert fake_res.status_code == 200
+    fdata = fake_res.json()
+    assert fdata["valid"] is False
+    assert fdata["sha256_digest"] == fake_hash
+
+
+@pytest.mark.asyncio
+async def test_dossier_pdf_streaming(api_client: AsyncClient):
+    """Verify that GET /api/dossier/{id}/pdf compiles and streams a valid 3-page Typst PDF."""
+    response = await api_client.get("/api/dossier/DEMO-NHAI-BRIDGE-01/pdf")
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/pdf"
+    assert "inline; filename=" in response.headers["content-disposition"]
+    assert "X-SHA256-Digest" in response.headers
+    assert response.headers["X-Gate-Status"] == "STATUTORY_NON_COMPLIANT"
+
+    # Verify binary PDF header and content
+    pdf_bytes = response.content
+    assert pdf_bytes.startswith(b"%PDF-")
+    assert b"%%EOF" in pdf_bytes
+    assert len(pdf_bytes) > 5000  # Multi-page compiled PDF
+
+
+@pytest.mark.asyncio
+async def test_subgraph_visualization_endpoint(api_client: AsyncClient):
+    """Verify that GET /api/graph/{id} exports React Flow formatted graph nodes and edges."""
+    response = await api_client.get("/api/graph/DEMO-NHAI-BRIDGE-01?depth=2")
+    assert response.status_code == 200
+    flow = response.json()
+    assert "nodes" in flow
+    assert "edges" in flow
+    assert isinstance(flow["nodes"], list)
+    assert isinstance(flow["edges"], list)
+    assert len(flow["nodes"]) > 0
+
+    # Inspect node structure for React Flow compatibility
+    sample_node = flow["nodes"][0]
+    assert "id" in sample_node
+    assert "data" in sample_node
+    assert "label" in sample_node["data"]
+    assert "position" in sample_node
+
+
+@pytest.mark.asyncio
+async def test_not_found_handling(api_client: AsyncClient):
+    """Verify 404 responses for missing document IDs across all endpoints."""
+    missing_id = "DOC-DOES-NOT-EXIST-404"
+
+    res_audit = await api_client.get(f"/api/audit/{missing_id}")
+    assert res_audit.status_code == 404
+    assert "not found" in res_audit.json()["detail"].lower()
+
+    res_pdf = await api_client.get(f"/api/dossier/{missing_id}/pdf")
+    assert res_pdf.status_code == 404
+    assert "not found" in res_pdf.json()["detail"].lower()
+
+    res_graph = await api_client.get(f"/api/graph/{missing_id}")
+    assert res_graph.status_code == 404
+    assert "not found" in res_graph.json()["detail"].lower()

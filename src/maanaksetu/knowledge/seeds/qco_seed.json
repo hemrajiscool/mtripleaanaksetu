@@ -1,0 +1,26 @@
+[
+  {
+    "qco_id": "QCO-CEMENT-2020",
+    "order_title": "Cement (Quality Control) Order, 2020",
+    "effective_date": "2020-04-01",
+    "covered_standards": "IS 269:2015,IS 269"
+  },
+  {
+    "qco_id": "QCO-STEEL-2020",
+    "order_title": "Steel and Steel Products (Quality Control) Order, 2020",
+    "effective_date": "2020-05-15",
+    "covered_standards": "IS 1786:2008,IS 1786"
+  },
+  {
+    "qco_id": "QCO-ELECTRICAL-2021",
+    "order_title": "Electrical Transformers (Quality Control) Order, 2021",
+    "effective_date": "2021-01-01",
+    "covered_standards": "IS 1180 (Part 1):2014,IS 1180 (Part 1),IS 1180,IS 335:2018,IS 335"
+  },
+  {
+    "qco_id": "QCO-LIGHTING-2020",
+    "order_title": "Solar DC and LED Luminaires (Quality Control) Order, 2020",
+    "effective_date": "2020-09-01",
+    "covered_standards": "IS 10322 (Part 5/Sec 3):2012,IS 10322,IS 16107 (Part 2/Sec 1):2012,IS 16107"
+  }
+]

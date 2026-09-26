@@ -1,0 +1,32 @@
+[
+  {
+    "citing_is": "IS 456:2000",
+    "cited_is": "IS 269:2015",
+    "clause_ref": "Clause 5.1"
+  },
+  {
+    "citing_is": "IS 456:2000",
+    "cited_is": "IS 269",
+    "clause_ref": "Clause 5.1"
+  },
+  {
+    "citing_is": "IS 456:2000",
+    "cited_is": "IS 1786:2008",
+    "clause_ref": "Clause 5.6"
+  },
+  {
+    "citing_is": "IS 456:2000",
+    "cited_is": "IS 1786",
+    "clause_ref": "Clause 5.6"
+  },
+  {
+    "citing_is": "IS 456",
+    "cited_is": "IS 269",
+    "clause_ref": "Clause 5.1"
+  },
+  {
+    "citing_is": "IS 456",
+    "cited_is": "IS 1786",
+    "clause_ref": "Clause 5.6"
+  }
+]

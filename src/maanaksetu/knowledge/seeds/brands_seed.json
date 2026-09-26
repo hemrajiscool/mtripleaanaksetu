@@ -1,0 +1,62 @@
+[
+  {
+    "brand_name": "UltraTech",
+    "oem_name": "UltraTech Cement Ltd",
+    "generic_category": "cement",
+    "associated_is": "IS 269:2015"
+  },
+  {
+    "brand_name": "ACC",
+    "oem_name": "ACC Limited",
+    "generic_category": "cement",
+    "associated_is": "IS 269:2015"
+  },
+  {
+    "brand_name": "Tata Tiscon",
+    "oem_name": "Tata Steel Limited",
+    "generic_category": "steel",
+    "associated_is": "IS 1786:2008"
+  },
+  {
+    "brand_name": "Jindal Panther",
+    "oem_name": "Jindal Steel & Power Ltd",
+    "generic_category": "steel",
+    "associated_is": "IS 1786:2008"
+  },
+  {
+    "brand_name": "Voltamp",
+    "oem_name": "Voltamp Transformers Ltd",
+    "generic_category": "transformer",
+    "associated_is": "IS 1180 (Part 1):2014"
+  },
+  {
+    "brand_name": "Crompton Greaves",
+    "oem_name": "CG Power and Industrial Solutions Ltd",
+    "generic_category": "transformer",
+    "associated_is": "IS 1180 (Part 1):2014"
+  },
+  {
+    "brand_name": "Schneider",
+    "oem_name": "Schneider Electric India",
+    "generic_category": "transformer",
+    "associated_is": "IS 1180 (Part 1):2014"
+  },
+  {
+    "brand_name": "Philips",
+    "oem_name": "Signify Innovations India Ltd",
+    "generic_category": "lighting",
+    "associated_is": "IS 10322 (Part 5/Sec 3):2012"
+  },
+  {
+    "brand_name": "Havells",
+    "oem_name": "Havells India Limited",
+    "generic_category": "lighting",
+    "associated_is": "IS 10322 (Part 5/Sec 3):2012"
+  },
+  {
+    "brand_name": "Bajaj",
+    "oem_name": "Bajaj Electricals Ltd",
+    "generic_category": "lighting",
+    "associated_is": "IS 10322 (Part 5/Sec 3):2012"
+  }
+]

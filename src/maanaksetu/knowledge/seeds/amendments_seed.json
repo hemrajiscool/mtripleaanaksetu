@@ -1,0 +1,78 @@
+[
+  {
+    "is_number": "IS 1786:2008",
+    "amendment_number": 3,
+    "publication_year": 2021,
+    "description": "Upgraded Fe 500D minimum elongation from 12% to 14.5% (effective 16% in seismic detailing), and mandatory UTS/YS ratio >= 1.25 for earthquake-resistant ductile detailing.",
+    "parameter_deltas": {
+      "elongation_pct": {
+        "Fe500D": 14.5
+      },
+      "uts_ys_ratio": {
+        "Fe500D": 1.25
+      }
+    }
+  },
+  {
+    "is_number": "IS 1786",
+    "amendment_number": 3,
+    "publication_year": 2021,
+    "description": "Upgraded Fe 500D minimum elongation from 12% to 14.5%, and mandatory UTS/YS ratio >= 1.25 for earthquake-resistant ductile detailing.",
+    "parameter_deltas": {
+      "elongation_pct": {
+        "Fe500D": 14.5
+      },
+      "uts_ys_ratio": {
+        "Fe500D": 1.25
+      }
+    }
+  },
+  {
+    "is_number": "IS 269:2015",
+    "amendment_number": 3,
+    "publication_year": 2021,
+    "description": "Standardized permissible performance enhancers and testing protocols for ordinary portland cement.",
+    "parameter_deltas": {
+      "max_performance_enhancer_pct": 5.0
+    }
+  },
+  {
+    "is_number": "IS 269",
+    "amendment_number": 3,
+    "publication_year": 2021,
+    "description": "Standardized permissible performance enhancers and testing protocols for ordinary portland cement.",
+    "parameter_deltas": {
+      "max_performance_enhancer_pct": 5.0
+    }
+  },
+  {
+    "is_number": "IS 1180 (Part 1):2014",
+    "amendment_number": 2,
+    "publication_year": 2016,
+    "description": "Harmonization of maximum allowable total losses at 50% and 100% loading with BEE Star-1 standards.",
+    "parameter_deltas": {
+      "max_total_loss_at_50_pct_w": 80.0,
+      "max_total_loss_at_100_pct_w": 270.0
+    }
+  },
+  {
+    "is_number": "IS 1180 (Part 1)",
+    "amendment_number": 2,
+    "publication_year": 2016,
+    "description": "Harmonization of maximum allowable total losses at 50% and 100% loading with BEE Star-1 standards.",
+    "parameter_deltas": {
+      "max_total_loss_at_50_pct_w": 80.0,
+      "max_total_loss_at_100_pct_w": 270.0
+    }
+  },
+  {
+    "is_number": "IS 1180",
+    "amendment_number": 2,
+    "publication_year": 2016,
+    "description": "Harmonization of maximum allowable total losses at 50% and 100% loading with BEE Star-1 standards.",
+    "parameter_deltas": {
+      "max_total_loss_at_50_pct_w": 80.0,
+      "max_total_loss_at_100_pct_w": 270.0
+    }
+  }
+]

@@ -1,0 +1,387 @@
+[
+  {
+    "is_number": "IS 269:1989",
+    "title": "Specification for 33 Grade Ordinary Portland Cement",
+    "year": 1989,
+    "status": "WITHDRAWN",
+    "gazette_date": "1989-08-01",
+    "withdrawal_date": "2015-03-15",
+    "superseded_by": "IS 269:2015",
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": 33.0,
+      "setting_time_initial_min": 30.0,
+      "soundness_mm": 10.0
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "Specification for 33 grade ordinary portland cement for general civil construction."
+  },
+  {
+    "is_number": "IS 269:2015",
+    "title": "Ordinary Portland Cement — Specification (Sixth Revision)",
+    "year": 2015,
+    "status": "ACTIVE",
+    "gazette_date": "2015-03-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": {
+        "33_grade": 33.0,
+        "43_grade": 43.0,
+        "53_grade": 53.0
+      },
+      "setting_time_initial_min": 30.0,
+      "soundness_mm": 10.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Covers requirements of 33 grade, 43 grade, and 53 grade ordinary portland cement for structural and prestressed applications."
+  },
+  {
+    "is_number": "IS 269",
+    "title": "Ordinary Portland Cement — Specification",
+    "year": 2015,
+    "status": "ACTIVE",
+    "gazette_date": "2015-03-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": {
+        "33_grade": 33.0,
+        "43_grade": 43.0,
+        "53_grade": 53.0
+      },
+      "setting_time_initial_min": 30.0,
+      "soundness_mm": 10.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Ordinary Portland Cement specifications, grades 33, 43, 53."
+  },
+  {
+    "is_number": "IS 456:2000",
+    "title": "Plain and Reinforced Concrete — Code of Practice (Fourth Revision)",
+    "year": 2000,
+    "status": "ACTIVE",
+    "gazette_date": "2000-10-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "min_grade_rcc": "M20",
+      "min_cement_content_kg_m3": 300,
+      "max_w_c_ratio": 0.55
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "Code of practice for plain and reinforced concrete in general building, bridge, and structural construction."
+  },
+  {
+    "is_number": "IS 456",
+    "title": "Plain and Reinforced Concrete — Code of Practice",
+    "year": 2000,
+    "status": "ACTIVE",
+    "gazette_date": "2000-10-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "min_grade_rcc": "M20",
+      "min_cement_content_kg_m3": 300,
+      "max_w_c_ratio": 0.55
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "Plain and Reinforced Concrete design, testing, and construction guidelines."
+  },
+  {
+    "is_number": "IS 1786:2008",
+    "title": "High Strength Deformed Steel Bars and Wires for Concrete Reinforcement",
+    "year": 2008,
+    "status": "ACTIVE",
+    "gazette_date": "2008-04-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "yield_stress_mpa": {
+        "Fe415": 415.0,
+        "Fe500": 500.0,
+        "Fe500D": 500.0,
+        "Fe550D": 550.0,
+        "Fe600": 600.0
+      },
+      "elongation_pct": {
+        "Fe500D": 16.0
+      }
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Requirements for high strength deformed steel bars and wires for concrete reinforcement (Fe 415, Fe 500, Fe 500D, Fe 550D, Fe 600)."
+  },
+  {
+    "is_number": "IS 1786",
+    "title": "High Strength Deformed Steel Bars and Wires for Concrete Reinforcement",
+    "year": 2008,
+    "status": "ACTIVE",
+    "gazette_date": "2008-04-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "yield_stress_mpa": {
+        "Fe415": 415.0,
+        "Fe500": 500.0,
+        "Fe500D": 500.0,
+        "Fe550D": 550.0,
+        "Fe600": 600.0
+      },
+      "elongation_pct": {
+        "Fe500D": 16.0
+      }
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "High strength deformed steel reinforcement bars."
+  },
+  {
+    "is_number": "IS 335:1993",
+    "title": "Specification for new insulating oils for transformers and switchgear",
+    "year": 1993,
+    "status": "WITHDRAWN",
+    "gazette_date": "1993-06-01",
+    "withdrawal_date": "2018-04-01",
+    "superseded_by": "IS 335:2018",
+    "key_parameters": {
+      "breakdown_voltage_kv": 30.0
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "Specification for new insulating oils for transformers and switchgear."
+  },
+  {
+    "is_number": "IS 335:2018",
+    "title": "Uninhibited and Inhibited Mineral Insulating Oils — Specification",
+    "year": 2018,
+    "status": "ACTIVE",
+    "gazette_date": "2018-04-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "breakdown_voltage_kv": 70.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Uninhibited and inhibited mineral insulating oils for power transformers, switchgear, and electrical apparatus."
+  },
+  {
+    "is_number": "IS 335",
+    "title": "Uninhibited and Inhibited Mineral Insulating Oils — Specification",
+    "year": 2018,
+    "status": "ACTIVE",
+    "gazette_date": "2018-04-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "breakdown_voltage_kv": 70.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Mineral insulating oils for transformers."
+  },
+  {
+    "is_number": "IS 1489 (Part 1):2015",
+    "title": "Portland Pozzolana Cement — Specification (Part 1 Fly Ash Based)",
+    "year": 2015,
+    "status": "ACTIVE",
+    "gazette_date": "2015-03-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": 33.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Specification for portland pozzolana cement fly ash based for marine and structural construction."
+  },
+  {
+    "is_number": "IS 1489",
+    "title": "Portland Pozzolana Cement — Specification",
+    "year": 2015,
+    "status": "ACTIVE",
+    "gazette_date": "2015-03-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 1,
+    "scope_text": "High grade Portland Pozzolana Cement for civil, marine, and hydraulic construction."
+  },
+  {
+    "is_number": "IS 8112:1989",
+    "title": "43 Grade Ordinary Portland Cement — Specification",
+    "year": 1989,
+    "status": "WITHDRAWN",
+    "gazette_date": "1989-10-01",
+    "withdrawal_date": "2015-03-15",
+    "superseded_by": "IS 269:2015",
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": 43.0
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "43 grade ordinary portland cement superseded by IS 269:2015."
+  },
+  {
+    "is_number": "IS 12269:1987",
+    "title": "53 Grade Ordinary Portland Cement — Specification",
+    "year": 1987,
+    "status": "WITHDRAWN",
+    "gazette_date": "1987-11-01",
+    "withdrawal_date": "2015-03-15",
+    "superseded_by": "IS 269:2015",
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": 53.0
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "53 grade ordinary portland cement superseded by IS 269:2015."
+  },
+  {
+    "is_number": "IS 1180:1989",
+    "title": "Outdoor/Indoor Type Three-Phase Distribution Transformers Up To and Including 100 kVA 11 kV — Specification",
+    "year": 1989,
+    "status": "WITHDRAWN",
+    "gazette_date": "1989-01-01",
+    "withdrawal_date": "2014-07-28",
+    "superseded_by": "IS 1180 (Part 1):2014",
+    "key_parameters": {
+      "max_losses_watts": 180.0
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "Outdoor/indoor type three-phase distribution transformers up to and including 100 kVA 11 kV."
+  },
+  {
+    "is_number": "IS 1180 (Part 1):2014",
+    "title": "Outdoor/Indoor Type Three-Phase Distribution Transformers Up To and Including 2 500 kVA, 33 kV — Specification (Part 1 Mineral Oil Immersed)",
+    "year": 2014,
+    "status": "ACTIVE",
+    "gazette_date": "2014-07-28",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "max_total_loss_at_50_pct_w": 80.0,
+      "max_total_loss_at_100_pct_w": 270.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Requirements and tests for mineral oil immersed distribution transformers up to 2500 kVA 33 kV."
+  },
+  {
+    "is_number": "IS 1180 (Part 1)",
+    "title": "Outdoor/Indoor Type Three-Phase Distribution Transformers (Part 1)",
+    "year": 2014,
+    "status": "ACTIVE",
+    "gazette_date": "2014-07-28",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 1,
+    "scope_text": "Mineral oil immersed distribution transformers up to 2500 kVA 33 kV."
+  },
+  {
+    "is_number": "IS 1180",
+    "title": "Outdoor/Indoor Type Three-Phase Distribution Transformers",
+    "year": 2014,
+    "status": "ACTIVE",
+    "gazette_date": "2014-07-28",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 1,
+    "scope_text": "Distribution transformers specifications."
+  },
+  {
+    "is_number": "IS 456:1978",
+    "title": "Code of Practice for Plain and Reinforced Concrete (Third Revision)",
+    "year": 1978,
+    "status": "WITHDRAWN",
+    "gazette_date": "1978-09-01",
+    "withdrawal_date": "2000-10-01",
+    "superseded_by": "IS 456:2000",
+    "key_parameters": {
+      "min_grade_rcc": "M15"
+    },
+    "is_qco_mandatory": 0,
+    "scope_text": "Third revision of code of practice for plain and reinforced concrete."
+  },
+  {
+    "is_number": "IS 10322 (Part 5/Sec 3):2012",
+    "title": "Luminaires — Particular Requirements — Luminaires for Road and Street Lighting",
+    "year": 2012,
+    "status": "ACTIVE",
+    "gazette_date": "2012-08-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "min_ip_rating": "IP65"
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Particular requirements for luminaires for road and street lighting, highway illumination, outdoor lighting on supply voltages up to 1000 V."
+  },
+  {
+    "is_number": "IS 10322",
+    "title": "Luminaires — Road and Street Lighting",
+    "year": 2012,
+    "status": "ACTIVE",
+    "gazette_date": "2012-08-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 1,
+    "scope_text": "Luminaires for road and street lighting, outdoor public lighting."
+  },
+  {
+    "is_number": "IS 16107 (Part 2/Sec 1):2012",
+    "title": "Luminaires for LED Lighting — Particular Requirements",
+    "year": 2012,
+    "status": "ACTIVE",
+    "gazette_date": "2012-09-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 1,
+    "scope_text": "LED luminaires for general lighting services, public and road lighting."
+  },
+  {
+    "is_number": "IS 16107",
+    "title": "Luminaires for LED Lighting",
+    "year": 2012,
+    "status": "ACTIVE",
+    "gazette_date": "2012-09-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 1,
+    "scope_text": "LED luminaires for road lighting, outdoor illumination."
+  },
+  {
+    "is_number": "IRC:112:2020",
+    "title": "Code of Practice for Concrete Road Bridges",
+    "year": 2020,
+    "status": "ACTIVE",
+    "gazette_date": "2020-01-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 0,
+    "scope_text": "Indian Roads Congress code of practice for design and construction of concrete road bridges, highway structures, and grade separators."
+  },
+  {
+    "is_number": "IS 1343:2012",
+    "title": "Code of Practice for Prestressed Concrete (Second Revision)",
+    "year": 2012,
+    "status": "ACTIVE",
+    "gazette_date": "2012-05-15",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {},
+    "is_qco_mandatory": 0,
+    "scope_text": "Code of practice for prestressed concrete structures, precast beams, and bridge girders."
+  },
+  {
+    "is_number": "IS 12330:1988",
+    "title": "Specification for Sulphate Resisting Portland Cement",
+    "year": 1988,
+    "status": "ACTIVE",
+    "gazette_date": "1988-12-01",
+    "withdrawal_date": null,
+    "superseded_by": null,
+    "key_parameters": {
+      "compressive_strength_28_day_mpa": 33.0
+    },
+    "is_qco_mandatory": 1,
+    "scope_text": "Sulphate resisting Portland cement for civil structures in high sulphate soil and marine environments."
+  }
+]
