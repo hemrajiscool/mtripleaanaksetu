@@ -31,6 +31,12 @@ export const VerificationModal: React.FC<VerificationModalProps> = ({
   const [hasSearched, setHasSearched] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  React.useEffect(() => {
+    if (prefillDigest && !digestInput) {
+      setDigestInput(prefillDigest);
+    }
+  }, [prefillDigest]);
+
   if (!isOpen) return null;
 
   const handleVerify = async (e?: React.FormEvent) => {
