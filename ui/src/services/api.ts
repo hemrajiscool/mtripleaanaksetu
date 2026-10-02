@@ -1,6 +1,15 @@
 import type { AuditResult, FlowGraphData, StandardEdition } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
+const getApiBase = (): string => {
+  const envUrl = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, '');
+  if (!envUrl) {
+    return '/api';
+  }
+  // Ensure the base URL includes /api so calls like `${API_BASE}/audit` hit `/api/audit`
+  return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
+};
+
+const API_BASE = getApiBase();
 
 export async function auditTender(
   text: string,
