@@ -4,6 +4,7 @@ import {
   PlusCircle,
   Lock,
   Globe,
+  LogIn,
 } from 'lucide-react';
 import type { AuditResult } from '../types';
 import type { PersonaProfile } from './PersonaGatewayModal';
@@ -18,6 +19,7 @@ interface RecommendationHeaderProps {
   persona: PersonaProfile;
   onOpenPersonaModal: () => void;
   onOpenVerifyModal: () => void;
+  onOpenLoginScreen?: () => void;
 }
 
 export const RecommendationHeader: React.FC<RecommendationHeaderProps> = ({
@@ -29,6 +31,7 @@ export const RecommendationHeader: React.FC<RecommendationHeaderProps> = ({
   persona,
   onOpenPersonaModal,
   onOpenVerifyModal,
+  onOpenLoginScreen,
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-[#f386a1]/90 backdrop-blur-xs border-b border-black/20 shadow-2xs">
@@ -90,6 +93,19 @@ export const RecommendationHeader: React.FC<RecommendationHeaderProps> = ({
             <Lock className="w-3.5 h-3.5 text-slate-700" />
             <span className="font-semibold">{t('verifyDigestBtn', language)}</span>
           </button>
+
+          {/* Official Login Screen Trigger */}
+          {onOpenLoginScreen && (
+            <button
+              type="button"
+              onClick={onOpenLoginScreen}
+              className="bg-white hover:bg-slate-50 border border-black px-2.5 py-1.5 flex items-center gap-1.5 text-xs font-mono text-slate-800 shadow-2xs transition-colors cursor-pointer"
+              title="Official Institutional Login Portal (Credentials & Roles)"
+            >
+              <LogIn className="w-3.5 h-3.5 text-slate-700" />
+              <span className="font-semibold">{language === 'hi' ? 'लॉगिन' : 'Login'}</span>
+            </button>
+          )}
         </div>
 
         {/* Right: Actions, Language Switcher & Audit Controls */}

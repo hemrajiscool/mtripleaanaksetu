@@ -16,6 +16,7 @@ from maanaksetu.domain.models import AuditResult, Finding, StandardEdition
 from maanaksetu.domain.states import DecisionState, ReviewState
 from maanaksetu.engine.orchestrator import AuditPipeline, compute_state_digest
 from maanaksetu.knowledge.graph import export_subgraph_for_flow
+from maanaksetu.knowledge.rag_assistant import call_cloud_or_local_llm, rag_engine
 from maanaksetu.knowledge.repository import get_standard_edition, list_standards
 
 router = APIRouter(tags=["Audit Gateway"])
@@ -417,7 +418,7 @@ def _generate_deterministic_assistant_reply(
     "/assistant/chat",
     response_model=AssistantChatResponse,
     summary="Procurement Assistant Copilot",
-    description="Conversational procurement copilot powered by OmniRoute workload/chat with deterministic statutory fallback.",
+    description="Conversational procurement copilot powered by RAG knowledge engine and LLM fallback.",
 )
 async def assistant_chat(
     payload: AssistantChatRequest,
@@ -428,59 +429,81 @@ async def assistant_chat(
     if payload.document_id:
         doc_result = cache.get_by_id(payload.document_id)
 
-    # Latest user query
+    # Extract latest user query
     user_query = ""
     for msg in reversed(payload.messages):
         if msg.role == "user":
             user_query = msg.content
             break
 
-    # Check if OmniRoute client is configured
-    omniroute_client: Optional[OmniRouteClient] = getattr(request.app.state, "omniroute", None)
-    if omniroute_client and omniroute_client.is_configured:
-        system_prompt = (
-            "You are the MaanakSetu Procurement Assistant, an authoritative AI copilot for Indian public procurement officers, "
-            "Bureau of Indian Standards (BIS) regulators, and vigilance auditors. "
-            "You operate under the Bureau of Indian Standards Act 2016, General Financial Rules (GFR 2017, especially Rule 144(i) on anti-monopoly and Rule 173 on tender procedures), "
-            "and Central Vigilance Commission (CVC) guidelines. "
-            "Provide precise, legally sound, and concise statutory guidance. Always cite specific rules, IS codes, and gazette orders."
+    # 1. RAG Knowledge Retrieval across indexed standards, GFR rules, and architecture
+    retrieved_docs = rag_engine.retrieve(user_query, top_k=3)
+    citations: List[str] = []
+    for d in retrieved_docs:
+        citations.extend(d.get("citations", []))
+
+    # 2. Build Enriched System Prompt with retrieved RAG chunks + Active Tender context
+    system_prompt = (
+        "You are the MaanakSetu Procurement Assistant, an authoritative AI copilot for Indian public procurement officers, "
+        "Bureau of Indian Standards (BIS) regulators, and vigilance auditors. "
+        "You operate under the Bureau of Indian Standards Act 2016, General Financial Rules (GFR 2017, especially Rule 144(i) on anti-monopoly and Rule 173 on tender procedures), "
+        "and Central Vigilance Commission (CVC) guidelines.\n"
+        "Provide precise, legally sound, and concise statutory guidance. Always cite specific rules, IS codes, and gazette orders.\n\n"
+    )
+
+    if doc_result:
+        system_prompt += (
+            f"Active Tender Document: ID={doc_result.document_id}, Title='{doc_result.document_title or 'Specification'}', "
+            f"GateStatus={doc_result.gate_status.value}. "
+            f"Evaluated Requirements: {doc_result.summary.total_requirements_evaluated}.\n"
+            f"Detected Defect Findings:\n"
         )
-        if doc_result:
+        for f in doc_result.findings:
             system_prompt += (
-                f"\n\nActive Tender Context: ID={doc_result.document_id}, Title={doc_result.document_title}, "
-                f"GateStatus={doc_result.gate_status.value}. "
-                f"Findings: {[{'type': f.violation_type.value, 'detected': f.detected_entity, 'basis': f.statutory_basis} for f in doc_result.findings]}."
+                f"- [{f.violation_type.value} | {f.severity.value}] Entity: {f.detected_entity}. "
+                f"Statutory Basis: {f.statutory_basis}. Replacement: {f.replacement_standard or 'N/A'}. "
+                f"Engineering Rationale: {f.engineering_rationale}\n"
             )
-        if payload.context:
-            system_prompt += f"\n\nAdditional Context:\n{payload.context}"
+        citations.append(f"Tender {doc_result.document_id}")
 
-        messages_for_llm = [{"role": "system", "content": system_prompt}]
-        for m in payload.messages:
-            messages_for_llm.append({"role": m.role, "content": m.content})
+    if retrieved_docs:
+        system_prompt += "\nAuthoritative Background Standards & Regulatory Knowledge Chunks:\n"
+        for doc in retrieved_docs:
+            system_prompt += f"--- {doc['title']} ---\n{doc['content']}\n"
 
-        try:
-            llm_reply = await omniroute_client.chat_completion(
-                messages=messages_for_llm,
-                model=OMNIROUTE_WORKLOAD_CHAT,
-                temperature=0.2,
-                max_tokens=1000,
-            )
-            if llm_reply:
-                return AssistantChatResponse(
-                    reply=llm_reply,
-                    model_used=OMNIROUTE_WORKLOAD_CHAT,
-                    citations=["OmniRoute Tier-1 LLM", "BIS Act 2016", "GFR 2017"],
-                )
-        except Exception:
-            pass  # Fall back to deterministic engine
+    if payload.context:
+        system_prompt += f"\nAdditional UI Context:\n{payload.context}\n"
 
+    # Convert messages for LLM
+    llm_messages = [{"role": m.role, "content": m.content} for m in payload.messages]
 
-    # Fallback deterministic statutory response
-    fallback_reply, citations = _generate_deterministic_assistant_reply(user_query, doc_result)
+    # 3. Multi-Provider LLM Attempt (OmniRoute workload/chat -> Gemini -> Groq -> OpenAI)
+    omniroute_client: Optional[OmniRouteClient] = getattr(request.app.state, "omniroute", None)
+    llm_result = await call_cloud_or_local_llm(
+        messages=llm_messages,
+        system_prompt=system_prompt,
+        omniroute_client=omniroute_client,
+    )
+
+    if llm_result:
+        reply_text, model_name = llm_result
+        unique_citations = list(dict.fromkeys(citations)) or ["BIS Act 2016", "GFR 2017"]
+        return AssistantChatResponse(
+            reply=reply_text,
+            model_used=model_name,
+            citations=unique_citations[:5],
+        )
+
+    # 4. Sovereign RAG Knowledge Engine Synthesis (when external LLM is offline or unconfigured)
+    rag_reply, rag_citations = rag_engine.synthesize_response(
+        query=user_query,
+        doc_result=doc_result,
+        retrieved_docs=retrieved_docs,
+    )
     return AssistantChatResponse(
-        reply=fallback_reply,
-        model_used="deterministic-sovereign-kb",
-        citations=citations,
+        reply=rag_reply,
+        model_used="maanaksetu/sovereign-rag-engine",
+        citations=rag_citations,
     )
 
 

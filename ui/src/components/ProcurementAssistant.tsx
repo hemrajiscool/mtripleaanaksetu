@@ -23,15 +23,19 @@ interface ProcurementAssistantProps {
 }
 
 const QUICK_PROMPTS_EN = [
+  'What defects were detected in this active tender?',
   'Why is UltraTech/ACC brand prohibited under GFR 144(i)?',
   'Explain difference between IS 269:1989 and IS 269:2015',
+  'Explain MaanakSetu system architecture & codebase',
   'How do I draft a statutory corrigendum notice for GeM?',
   'What is the significance of the SHA-256 audit digest?',
 ];
 
 const QUICK_PROMPTS_HI = [
+  'इस सक्रिय निविदा में कौन सी वैधानिक कमियां पाई गईं?',
   'जीएफआर 144(i) के तहत अल्ट्राटेक/एसीसी ब्रांड क्यों प्रतिबंधित है?',
   'IS 269:1989 और IS 269:2015 के बीच अंतर स्पष्ट करें',
+  'मानक सेतु प्रणाली वास्तुकला (Architecture) और कोडबेस स्पष्ट करें',
   'GeM के लिए आधिकारिक शुद्धिपत्र (Corrigendum) कैसे तैयार करें?',
   'SHA-256 ऑडिट डाइजेस्ट का वैधानिक महत्व क्या है?',
 ];
