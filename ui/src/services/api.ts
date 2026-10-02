@@ -1,6 +1,6 @@
 import type { AuditResult, FlowGraphData, StandardEdition } from '../types';
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export async function auditTender(
   text: string,
