@@ -9,6 +9,7 @@ import { StandardDetailModal } from './components/StandardDetailModal';
 import { AdjudicationModal } from './components/AdjudicationModal';
 import { DossierModal } from './components/DossierModal';
 import { PersonaGatewayModal, PERSONA_PROFILES, type PersonaProfile } from './components/PersonaGatewayModal';
+import { LoginScreen } from './components/LoginScreen';
 import { TelemetryStepper } from './components/TelemetryStepper';
 import { ProcurementAssistant } from './components/ProcurementAssistant';
 import { VerificationModal } from './components/VerificationModal';
@@ -32,6 +33,7 @@ export const App: React.FC = () => {
   });
   const [isPersonaModalOpen, setIsPersonaModalOpen] = useState(false);
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
+  const [isLoginScreenOpen, setIsLoginScreenOpen] = useState(false);
 
   // Modals & In-situ inspection state
   const [selectedStandard, setSelectedStandard] = useState<string | null>(null);
@@ -88,6 +90,21 @@ export const App: React.FC = () => {
     localStorage.setItem('maanaksetu_persona_id', p.id);
   };
 
+  if (isLoginScreenOpen) {
+    return (
+      <LoginScreen
+        onLogin={(newPersona) => {
+          handleSelectPersona(newPersona);
+          setIsLoginScreenOpen(false);
+        }}
+        onCancel={() => setIsLoginScreenOpen(false)}
+        canCancel={true}
+        currentPersona={currentPersona}
+        language={language}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen text-slate-900 flex flex-col font-sans selection:bg-slate-900 selection:text-white">
       {/* 1. Clean, Quiet Institutional Header */}
@@ -100,6 +117,7 @@ export const App: React.FC = () => {
         persona={currentPersona}
         onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
         onOpenVerifyModal={() => setIsVerifyModalOpen(true)}
+        onOpenLoginScreen={() => setIsLoginScreenOpen(true)}
       />
 
       {/* 2. Error Display */}
