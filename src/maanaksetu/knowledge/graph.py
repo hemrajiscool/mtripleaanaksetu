@@ -247,6 +247,47 @@ def export_subgraph_for_flow(
                     visited_nodes.add(successor)
                     queue.append((successor, depth + 1))
 
+            # Also traverse predecessors (e.g. parent standards citing node_id)
+            for pred in graph.predecessors(node_id):
+                edge_key = (pred, node_id)
+                edge_data = graph.get_edge_data(pred, node_id, default={})
+                rel = edge_data.get("relationship", "REF")
+
+                if pred not in sub_nodes:
+                    pred_data = graph.nodes.get(pred, {})
+                    pred_status = pred_data.get("status", StandardStatus.ACTIVE)
+                    pred_status_val = pred_status.value if isinstance(pred_status, StandardStatus) else str(pred_status)
+                    color = "#059669" if pred_status_val == "ACTIVE" else "#DC2626"
+                    sub_nodes[pred] = {
+                        "id": pred,
+                        "label": f"{pred} ({pred_status_val})",
+                        "title": pred_data.get("title", ""),
+                        "status": pred_status_val,
+                        "color": color,
+                        "is_root": False,
+                        "data": {
+                            "label": f"{pred} ({pred_status_val})",
+                            "title": pred_data.get("title", ""),
+                            "status": pred_status_val,
+                            "color": color,
+                        },
+                        "position": {"x": 0, "y": 0},
+                    }
+
+                if edge_key not in visited_edges:
+                    visited_edges.add(edge_key)
+                    sub_edges.append({
+                        "id": f"e-{pred}->{node_id}",
+                        "source": pred,
+                        "target": node_id,
+                        "relationship": rel,
+                        "animated": rel == "SUPERSEDES",
+                    })
+
+                if pred not in visited_nodes and depth < max_depth:
+                    visited_nodes.add(pred)
+                    queue.append((pred, depth + 1))
+
     return {
         "nodes": list(sub_nodes.values()),
         "edges": sub_edges,

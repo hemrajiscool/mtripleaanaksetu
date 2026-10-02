@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slide 2 — Idea Title / Proposed Solution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #000000;
+      padding: 24px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* TOP HEADER */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .team-pill {
+      border: 2px solid #000000;
+      border-radius: 9999px;
+      padding: 8px 30px;
+      background: #ffffff;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+    .slide-title {
+      font-size: 46px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+    .sih-logo-img {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    /* SOLUTION TOP BANNER */
+    .solution-banner {
+      border: 2px solid #000000;
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 12px 24px;
+      margin-top: 10px;
+    }
+    .solution-banner-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #00be62;
+      margin-bottom: 4px;
+    }
+    .solution-banner-body {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: #000000;
+    }
+
+    /* MAIN 2-COLUMN SPLIT */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 880px 1fr;
+      gap: 24px;
+      margin-top: 14px;
+      height: 834px;
+    }
+
+    /* LEFT CONTAINER: PROBLEMS & OUR SOLUTIONS */
+    .left-container {
+      background: #f0fdf4;
+      border: 2.5px solid #000000;
+      border-radius: 20px;
+      padding: 20px 22px;
+      box-shadow: 4px 4px 0px #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .left-title {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .title-green {
+      color: #047857;
+    }
+    .left-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      flex: 1;
+    }
+    .prob-card {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: 3px 3px 0px #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .prob-card-title {
+      font-size: 20.5px;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #000000;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .defect-badge {
+      display: inline-block;
+      background: #ffe4e6;
+      color: #9f1239;
+      border: 1.5px solid #f43f5e;
+      font-size: 12.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 9px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .solution-badge {
+      display: inline-block;
+      background: #dcfce7;
+      color: #14532d;
+      border: 1.5px solid #22c55e;
+      font-size: 12.5px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 9px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .prob-desc {
+      font-size: 15.5px;
+      line-height: 1.4;
+      color: #1e293b;
+      margin-bottom: 10px;
+    }
+    .prob-desc strong {
+      color: #000000;
+      font-weight: 800;
+    }
+    .sol-bullets {
+      font-size: 15.5px;
+      line-height: 1.42;
+      color: #0f172a;
+    }
+    .sol-bullets strong {
+      font-weight: 800;
+      color: #000000;
+    }
+
+    /* RIGHT CONTAINER: RELATIVE POSITIONED FOR SVG OVERLAY */
+    .right-workflow-wrap {
+      position: relative;
+      width: 944px;
+      height: 834px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* SVG CONNECTOR OVERLAY */
+    .svg-flow-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 944px;
+      height: 834px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .flow-arrow {
+      stroke: #000000;
+      stroke-width: 2.2;
+      fill: none;
+    }
+
+    /* TOP 3 STREAMS GRID */
+    .streams-grid {
+      display: grid;
+      grid-template-columns: 304px 304px 304px;
+      gap: 16px;
+      height: 292px;
+      position: relative;
+      z-index: 1;
+    }
+    .stream-col {
+      background: #00a4c1;
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .stream-header {
+      color: #ffffff;
+      font-size: 18.5px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .green-pills-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .green-pill {
+      background: #00af55;
+      color: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 7px 6px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.2;
+    }
+    .dual-white-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .white-node {
+      background: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 8px;
+      padding: 8px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.3;
+    }
+    .white-node-full {
+      background: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-align: center;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.3;
+    }
+
+    /* LOWER SECTION: DSS + SIDE PANELS */
+    .lower-section {
+      display: grid;
+      grid-template-columns: 564px 364px;
+      gap: 16px;
+      height: 520px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* DSS CONTAINER */
+    .dss-container {
+      background: #00a4c1;
+      border-radius: 18px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+    .dss-title {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .dss-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      height: 72px;
+    }
+    .dss-white-node {
+      background: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 8px;
+      padding: 10px 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1.35;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    .dss-subtext {
+      font-size: 10px;
+      font-weight: 500;
+      color: #475569;
+      margin-top: 3px;
+    }
+
+    /* SIDE PANELS */
+    .side-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      margin-top: 42px; /* Perfectly aligns side-row-top with dss-row-1 */
+    }
+    .side-row-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      height: 72px;
+    }
+    .gate-box {
+      background: #00af55;
+      color: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.25;
+      height: 100%;
+    }
+    .central-db-box {
+      background: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      font-size: 12.5px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.25;
+      height: 100%;
+    }
+    .side-row-mid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      height: 72px;
+    }
+    .filter-box {
+      background: #ffffff;
+      border: 1.5px solid #000000;
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .terminal-pill-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 72px;
+    }
+    .terminal-pill {
+      background: #00af55;
+      color: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 9999px;
+      padding: 16px 24px;
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      text-align: center;
+      box-shadow: 2px 2px 0px #000000;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER BAR -->
+  <header class="header-bar">
+    <div class="team-pill">PARALLAX NEXUS</div>
+    <h1 class="slide-title">IDEA TITLE</h1>
+    <img src="assets/sih_logo.png" class="sih-logo-img" alt="Smart India Hackathon 2025" />
+  </header>
+
+  <!-- TOP BANNER: OUR SOLUTION -->
+  <div class="solution-banner">
+    <div class="solution-banner-title">Our Solution</div>
+    <div class="solution-banner-body">
+      AI and Knowledge Graph-enabled Standards Recommendation &amp; Verification Engine for Indian Public Procurement that digitizes GeM tenders, reconciles specifications against active BIS Gazette notifications, eliminates GFR Rule 144(i) brand exclusions, and provides a DSS for statutory tender corrigenda.
+    </div>
+  </div>
+
+  <!-- MAIN SPLIT: PROBLEMS VS WORKFLOW -->
+  <main class="main-grid">
+
+    <!-- LEFT SIDE: PROBLEMS & OUR SOLUTIONS -->
+    <section class="left-container">
+      <div class="left-title">
+        <span>Problems</span> <span class="title-green">&amp; our Solutions</span>
+      </div>
+
+      <div class="left-cards-grid">
+        <!-- CARD 1 -->
+        <article class="prob-card">
+          <div>
+            <h2 class="prob-card-title">Superseded Standards &amp; Legacy Citations</h2>
+            <div class="defect-badge">Statutory Defect</div>
+            <p class="prob-desc">
+              Tenders cite withdrawn codes (e.g. <strong>IS 269:1989 cement</strong>, <strong>IS 1180:1989 transformers</strong>), risking structural failure and statutory invalidation under <strong>GFR Rule 173</strong>.
+            </p>
+          </div>
+          <div>
+            <div class="solution-badge">MaanakSetu Remedy</div>
+            <div class="sol-bullets">
+              &bull; Automated <strong>Gazette reconciliation</strong> against active QCO standards.<br>
+              &bull; <strong>Normative reference DAG</strong> resolving cascading sub-clause dependencies.
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 2 -->
+        <article class="prob-card">
+          <div>
+            <h2 class="prob-card-title">No Centralized Real-Time Standards Registry</h2>
+            <div class="defect-badge">Statutory Defect</div>
+            <p class="prob-desc">
+              Gazetted amendments, QCOs, and validity dates are scattered across disparate PDFs, leaving officers without instant verification tools.
+            </p>
+          </div>
+          <div>
+            <div class="solution-badge">MaanakSetu Remedy</div>
+            <div class="sol-bullets">
+              &bull; <strong>MaanakSetu Knowledge Graph</strong> with real-time BIS Gazette synchronization.<br>
+              &bull; Sub-second <strong>structured lookup</strong> across 22,000+ national standards.
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 3 -->
+        <article class="prob-card">
+          <div>
+            <h2 class="prob-card-title">Restrictive Brand Exclusions (GFR 144(i))</h2>
+            <div class="defect-badge">Statutory Defect</div>
+            <p class="prob-desc">
+              Tenders mandate proprietary vendor makes (<strong>"UltraTech only"</strong>, <strong>"Philips LED only"</strong>), violating GFR 144(i) and triggering CVC vigilance inquiries.
+            </p>
+          </div>
+          <div>
+            <div class="solution-badge">MaanakSetu Remedy</div>
+            <div class="sol-bullets">
+              &bull; <strong>NER + 1,200+ OEM Brand Dict</strong> to intercept proprietary bias.<br>
+              &bull; Auto-translation into <strong>neutral performance parameters</strong>.
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 4 -->
+        <article class="prob-card">
+          <div>
+            <h2 class="prob-card-title">Lack of Decision Support System for Corrigenda</h2>
+            <div class="defect-badge">Statutory Defect</div>
+            <p class="prob-desc">
+              Manual compliance audits take <strong>5&ndash;7 days per tender</strong>; drafting legal corrigenda is ambiguous, error-prone, and causes litigation delays.
+            </p>
+          </div>
+          <div>
+            <div class="solution-badge">MaanakSetu Remedy</div>
+            <div class="sol-bullets">
+              &bull; Rule-based <strong>Decision Support System (DSS)</strong> generating legal corrigenda clauses.<br>
+              &bull; <strong>SHA-256 verified audit dossier</strong> for official vigilance defense.
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- RIGHT SIDE: SYSTEM WORKFLOW DIAGRAM WITH SVG OVERLAY -->
+    <section class="right-workflow-wrap">
+      
+      <!-- SVG DIRECTED CONNECTORS -->
+      <svg class="svg-flow-overlay" id="svg-flow-overlay" viewBox="0 0 944 834">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#000000" />
+          </marker>
+        </defs>
+      </svg>
+
+      <!-- TOP 3 INGESTION & DATA STREAMS -->
+      <div class="streams-grid">
+        
+        <!-- STREAM 1: TENDER DIGITIZATION -->
+        <div class="stream-col" id="col-stream-1">
+          <div class="stream-header">Tender Digitization</div>
+          <div class="green-pills-row">
+            <div class="green-pill" id="s1-pill-1">GeM Tender PDF</div>
+            <div class="green-pill" id="s1-pill-2">Scope Clauses</div>
+          </div>
+          <div class="dual-white-row">
+            <div class="white-node" id="s1-node-1">PyMuPDF Parser<br>(Fast Text &lt;15ms)</div>
+            <div class="white-node" id="s1-node-2">Docling TableFormer<br>(Specs &ge;3 Cols)</div>
+          </div>
+          <div class="white-node-full" id="s1-triage" style="font-weight: 800;">
+            NER &amp; Clause Triage (Jev AI)
+          </div>
+        </div>
+
+        <!-- STREAM 2: STANDARDS REPOSITORY -->
+        <div class="stream-col" id="col-stream-2">
+          <div class="stream-header">Standards Repository</div>
+          <div class="green-pill" id="s2-pills">
+            BIS Gazette Notifications &amp; Active QCOs
+          </div>
+          <div class="white-node-full" id="s2-fts5">
+            SQLite FTS5 Catalog (22,000+ Verified Standards)
+          </div>
+          <div class="white-node-full" id="s2-bgem3">
+            BGE-M3 Dense Embeddings (via OmniRoute Gateway)
+          </div>
+        </div>
+
+        <!-- STREAM 3: PROCUREMENT RULES -->
+        <div class="stream-col" id="col-stream-3">
+          <div class="stream-header">Procurement Rules</div>
+          <div class="green-pill" id="s3-pills">
+            GFR 2017 Rules &amp; CVC Directives
+          </div>
+          <div class="white-node-full" id="s3-brand">
+            Rule 144(i) Anti-Monopoly Brand Dict (1,200+ OEMs)
+          </div>
+          <div class="white-node-full" id="s3-metrics">
+            GFR Rule 173(i) Neutral Performance Metrics
+          </div>
+        </div>
+
+      </div>
+
+      <!-- LOWER SECTION: DSS ENGINE CONTAINER & SIDE PANELS -->
+      <div class="lower-section">
+        
+        <!-- DSS BLUE BOX -->
+        <div class="dss-container" id="dss-box">
+          <div class="dss-title">DSS</div>
+          
+          <!-- STAGE 1: INGESTION & GROUNDING -->
+          <div class="dss-row" id="dss-row-1">
+            <div class="dss-white-node" id="dss-tender">
+              <span>Fetch Tender Clause &amp; Technical Specs</span>
+              <span class="dss-subtext">Stream 1 Grounding</span>
+            </div>
+            <div class="dss-white-node" id="dss-standards">
+              <span>Fetch Active BIS Standard &amp; Amendments</span>
+              <span class="dss-subtext">Synchronized Gazette Ledger</span>
+            </div>
+          </div>
+
+          <!-- STAGE 2: VERIFICATION & GRAPH REASONING -->
+          <div class="dss-row" id="dss-row-2">
+            <div class="dss-white-node" id="dss-dag">
+              <span style="font-weight: 800;">NetworkX Normative DAG Traversal</span>
+              <span class="dss-subtext">Cascading Sub-Clause Dependencies</span>
+            </div>
+            <div class="dss-white-node" id="dss-ast">
+              <span style="font-weight: 800;">SpecGuard AST Invariants</span>
+              <span class="dss-subtext">Deterministic Physical/Chemical Limits</span>
+            </div>
+          </div>
+
+          <!-- STAGE 3: SYNTHESIS & AUDIT GENERATION -->
+          <div class="dss-row" id="dss-row-3">
+            <div class="dss-white-node" id="dss-corrigendum" style="border: 2px solid #00be62;">
+              <span style="color: #00be62; font-weight: 900; font-size: 13px;">Statutory Corrigendum Formulation</span>
+              <span class="dss-subtext" style="color: #000000; font-weight: 600;">GFR Rule 173(v) Legal Replacement</span>
+            </div>
+            <div class="dss-white-node" id="dss-dossier" style="border: 2px solid #000000;">
+              <span style="color: #000000; font-weight: 900; font-size: 13px;">SHA-256 Audit Dossier</span>
+              <span class="dss-subtext" style="color: #000000; font-weight: 600;">Tamper-Evident Report (typst-py)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDE PANELS & TERMINAL GOAL -->
+        <div class="side-blocks" id="side-col">
+          <div class="side-row-top">
+            <div class="gate-box" id="side-gem">GeM Pre-Publishing Gate</div>
+            <div class="central-db-box" id="side-db">Centralized Standards DB</div>
+          </div>
+          <div class="side-row-mid">
+            <div class="filter-box" id="side-filter">Filtration<br>(Dept, Ministry, CPSE)</div>
+            <div class="filter-box" id="side-tracking">Vigilance &amp; Compliance Tracking</div>
+          </div>
+          <div class="terminal-pill-wrap">
+            <div class="terminal-pill" id="side-maanaksetu">MAANAKSETU</div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+  </main>
+
+  <!-- ACCURATE VECTOR ARROW GENERATION SCRIPT -->
+  <script>
+    function renderArrows() {
+      const overlay = document.getElementById('svg-flow-overlay');
+      const wrap = document.querySelector('.right-workflow-wrap').getBoundingClientRect();
+
+      function getBox(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        return {
+          top: Math.round(r.top - wrap.top),
+          bottom: Math.round(r.bottom - wrap.top),
+          left: Math.round(r.left - wrap.left),
+          right: Math.round(r.right - wrap.left),
+          cx: Math.round(r.left - wrap.left + r.width / 2),
+          cy: Math.round(r.top - wrap.top + r.height / 2),
+          w: Math.round(r.width),
+          h: Math.round(r.height)
+        };
+      }
+
+      function addPath(d) {
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d);
+        path.setAttribute('class', 'flow-arrow');
+        path.setAttribute('marker-end', 'url(#arrow)');
+        overlay.appendChild(path);
+      }
+
+      // Vertical down arrow
+      function vDown(fromId, toId, xOffset = 0) {
+        const b1 = getBox(fromId);
+        const b2 = getBox(toId);
+        if (!b1 || !b2) return;
+        const x = b1.cx + xOffset;
+        addPath(`M ${x} ${b1.bottom} L ${x} ${b2.top - 2}`);
+      }
+
+      // Diagonal arrow from b1 to b2
+      function diag(fromId, toId, targetOffset = 0) {
+        const b1 = getBox(fromId);
+        const b2 = getBox(toId);
+        if (!b1 || !b2) return;
+        addPath(`M ${b1.cx} ${b1.bottom} L ${b2.cx + targetOffset} ${b2.top - 2}`);
+      }
+
+      // Horizontal arrow (left to right or right to left)
+      function hArrow(fromId, toId, dir = 'right') {
+        const b1 = getBox(fromId);
+        const b2 = getBox(toId);
+        if (!b1 || !b2) return;
+        if (dir === 'right') {
+          addPath(`M ${b1.right} ${b1.cy} L ${b2.left - 2} ${b2.cy}`);
+        } else {
+          addPath(`M ${b1.left} ${b1.cy} L ${b2.right + 2} ${b2.cy}`);
+        }
+      }
+
+      // STREAM 1:
+      vDown('s1-pill-1', 's1-node-1');
+      vDown('s1-pill-2', 's1-node-2');
+      diag('s1-node-1', 's1-triage', -50);
+      diag('s1-node-2', 's1-triage', 50);
+      // Straight down from s1-triage into dss-tender:
+      const b1 = getBox('s1-triage');
+      const dssTender = getBox('dss-tender');
+      if (b1 && dssTender) {
+        addPath(`M ${dssTender.cx} ${b1.bottom} L ${dssTender.cx} ${dssTender.top - 2}`);
+      }
+
+      // STREAM 2:
+      vDown('s2-pills', 's2-fts5');
+      vDown('s2-fts5', 's2-bgem3');
+      // Straight down from s2-bgem3 into dss-standards:
+      const b2 = getBox('s2-bgem3');
+      const dssBis = getBox('dss-standards');
+      if (b2 && dssBis) {
+        addPath(`M ${dssBis.cx} ${b2.bottom} L ${dssBis.cx} ${dssBis.top - 2}`);
+      }
+
+      // STREAM 3:
+      vDown('s3-pills', 's3-brand');
+      vDown('s3-brand', 's3-metrics');
+      // Straight down from s3-metrics into side-db:
+      const b3 = getBox('s3-metrics');
+      const sideDb = getBox('side-db');
+      if (b3 && sideDb) {
+        addPath(`M ${sideDb.cx} ${b3.bottom} L ${sideDb.cx} ${sideDb.top - 2}`);
+      }
+
+      // SIDE PANELS (Horizontal line: Centralized DB -> GeM Gate -> DSS):
+      hArrow('side-db', 'side-gem', 'left');
+      hArrow('side-gem', 'dss-standards', 'left');
+      vDown('side-gem', 'side-filter');
+      vDown('side-db', 'side-tracking');
+
+      // DSS INTERNAL:
+      hArrow('dss-tender', 'dss-standards', 'right');
+      vDown('dss-tender', 'dss-dag');
+      vDown('dss-standards', 'dss-ast');
+      vDown('dss-dag', 'dss-corrigendum');
+      vDown('dss-ast', 'dss-dossier');
+      hArrow('dss-corrigendum', 'dss-dossier', 'right');
+
+      // CONVERGENCE TO MAANAKSETU:
+      const dssDossier = getBox('dss-dossier');
+      const msPill = getBox('side-maanaksetu');
+      if (dssDossier && msPill) {
+        addPath(`M ${dssDossier.right} ${dssDossier.cy} C ${dssDossier.right + 20} ${dssDossier.cy}, ${msPill.left - 20} ${msPill.cy}, ${msPill.left - 2} ${msPill.cy}`);
+      }
+      vDown('side-filter', 'side-maanaksetu', -40);
+      vDown('side-tracking', 'side-maanaksetu', 40);
+    }
+
+    window.addEventListener('load', renderArrows);
+    document.addEventListener('DOMContentLoaded', renderArrows);
+  </script>
+
+</body>
+</html>

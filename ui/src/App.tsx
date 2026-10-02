@@ -1,286 +1,156 @@
-import React, { useState } from 'react';
-import {
-  FileText,
-  ListTree,
-  Network,
-  BookOpen,
-  Shield,
-} from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { AuditResult, Finding } from './types';
 import { DEMO_TENDERS } from './data/demos';
 import { auditTender } from './services/api';
-import { Header } from './components/Header';
-import { AuditInput } from './components/AuditInput';
-import { GateClearanceCard } from './components/GateClearanceCard';
-import { FindingsList } from './components/FindingsList';
-import { RequirementsTable } from './components/RequirementsTable';
-import { DependencyGraph } from './components/DependencyGraph';
-import { StandardsCatalog } from './components/StandardsCatalog';
+import { RecommendationHeader } from './components/RecommendationHeader';
+import { DocumentIntake } from './components/DocumentIntake';
+import { StandardsRegimeView } from './components/StandardsRegimeView';
 import { StandardDetailModal } from './components/StandardDetailModal';
 import { AdjudicationModal } from './components/AdjudicationModal';
-
-type TabType = 'findings' | 'requirements' | 'graph' | 'catalog';
+import { DossierModal } from './components/DossierModal';
+import { AlertCircle, Loader2 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [selectedDemoId, setSelectedDemoId] = useState<string>(DEMO_TENDERS[0].id);
-  const [activeTab, setActiveTab] = useState<TabType>('findings');
-
+  const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
 
-  // Modals state
+  // Modals & In-situ inspection state
   const [selectedStandard, setSelectedStandard] = useState<string | null>(null);
   const [adjudicatingFinding, setAdjudicatingFinding] = useState<Finding | null>(null);
+  const [isDossierOpen, setIsDossierOpen] = useState(false);
 
-  const handleSelectDemoId = (demoId: string) => {
-    setSelectedDemoId(demoId);
-    setError(null);
-  };
-
-  const handleRunAudit = async (text: string, docId?: string, docTitle?: string) => {
+  // Audit execution
+  const executeAudit = useCallback(async (text: string, title?: string, docId?: string) => {
     setLoading(true);
     setError(null);
 
     try {
       const result = await auditTender(
         text,
-        docId?.trim() || undefined,
-        docTitle?.trim() || undefined
+        docId || undefined,
+        title || undefined
       );
       setAuditResult(result);
-      setActiveTab('findings');
     } catch (err: any) {
-      setError(err.message || 'Audit execution encountered a system error.');
+      setError(err.message || 'Audit execution encountered an unexpected system error.');
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  // Initial load: pre-load the default benchmark tender so there is instant, convincing demo state
+  useEffect(() => {
+    const defaultDemo = DEMO_TENDERS[0];
+    executeAudit(defaultDemo.text, defaultDemo.title, defaultDemo.id);
+  }, [executeAudit]);
+
+  // Handler for custom analysis from DocumentIntake
+  const handleAnalyze = async (text: string, title?: string) => {
+    await executeAudit(text, title);
   };
 
-  const handleClear = () => {
+  // Reset to intake
+  const handleAuditNew = () => {
     setAuditResult(null);
     setError(null);
   };
 
+  // Optimistic update after adjudication
+  const handleAdjudicated = (updatedResult: AuditResult) => {
+    setAuditResult(updatedResult);
+  };
+
   return (
-    <div className="min-h-screen bg-gov-950 text-slate-100 flex flex-col font-sans selection:bg-blue-600/30">
-      {/* Institutional Top Bar */}
-      <Header
-        onSelectDemo={handleSelectDemoId}
-        activeDemoId={selectedDemoId}
-        onReset={handleClear}
-        onOpenCatalog={() => setActiveTab('catalog')}
+    <div className="min-h-screen text-slate-900 flex flex-col font-sans selection:bg-slate-900 selection:text-white">
+      {/* 1. Clean, Quiet Institutional Header */}
+      <RecommendationHeader
+        auditResult={auditResult}
+        onAuditNew={handleAuditNew}
+        onExportDossier={() => setIsDossierOpen(true)}
       />
 
-      {/* Main Workspace */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6">
-        {/* Specification Input & Benchmark Demos */}
-        <AuditInput
-          onRunAudit={handleRunAudit}
-          isLoading={loading}
-          selectedDemoId={selectedDemoId}
-          onClear={handleClear}
-        />
-
-        {/* Global Error Notice */}
-        {error && (
-          <div className="bg-red-950/80 border border-red-800 rounded-lg p-4 text-xs text-red-200 flex items-center justify-between">
+      {/* 2. Error Display */}
+      {error && (
+        <div className="max-w-5xl mx-auto mt-4 px-4 w-full">
+          <div className="bg-rose-50 border border-rose-200 text-rose-800 px-4 py-3 rounded-lg text-xs flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-2">
-              <span className="font-semibold font-mono">[AUDIT_ERROR]</span>
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
               <span>{error}</span>
             </div>
             <button
+              type="button"
               onClick={() => setError(null)}
-              className="text-red-400 hover:text-red-200 text-xs underline font-mono cursor-pointer"
+              className="text-xs font-semibold text-rose-900 hover:underline"
             >
               Dismiss
             </button>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Audit Results Viewport */}
-        {auditResult && (
-          <div className="space-y-6">
-            {/* Level 1: Sovereign Gate Clearance Barometer */}
-            <GateClearanceCard audit={auditResult} />
-
-            {/* Level 2 & 3: Multi-View Navigation Tabs */}
-            <div className="border-b border-slate-800 flex items-center justify-between overflow-x-auto">
-              <div className="flex items-center gap-1 font-mono text-xs whitespace-nowrap min-w-max">
-                <button
-                  data-testid="tab-findings"
-                  onClick={() => setActiveTab('findings')}
-                  className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors cursor-pointer ${
-                    activeTab === 'findings'
-                      ? 'border-blue-500 text-blue-400 bg-slate-900/40'
-                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20'
-                  }`}
-                >
-                  <FileText className="h-3.5 w-3.5" />
-                  <span>Findings & Redlines</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded ${
-                      auditResult.findings.length > 0
-                        ? 'bg-red-950/80 text-red-300 border border-red-800/80 font-bold'
-                        : 'bg-slate-800 text-slate-400'
-                    }`}
-                  >
-                    {auditResult.findings.length}
-                  </span>
-                </button>
-
-                <button
-                  data-testid="tab-requirements"
-                  onClick={() => setActiveTab('requirements')}
-                  className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors cursor-pointer ${
-                    activeTab === 'requirements'
-                      ? 'border-blue-500 text-blue-400 bg-slate-900/40'
-                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20'
-                  }`}
-                >
-                  <ListTree className="h-3.5 w-3.5" />
-                  <span>Requirements Breakdown</span>
-                  <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">
-                    {auditResult.requirements?.length || 0}
-                  </span>
-                </button>
-
-                <button
-                  data-testid="tab-graph"
-                  onClick={() => setActiveTab('graph')}
-                  className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors cursor-pointer ${
-                    activeTab === 'graph'
-                      ? 'border-blue-500 text-blue-400 bg-slate-900/40'
-                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20'
-                  }`}
-                >
-                  <Network className="h-3.5 w-3.5" />
-                  <span>Normative DAG Graph</span>
-                </button>
-
-                <button
-                  data-testid="tab-catalog"
-                  onClick={() => setActiveTab('catalog')}
-                  className={`flex items-center gap-2 px-4 py-2.5 border-b-2 font-medium transition-colors cursor-pointer ${
-                    activeTab === 'catalog'
-                      ? 'border-blue-500 text-blue-400 bg-slate-900/40'
-                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/20'
-                  }`}
-                >
-                  <BookOpen className="h-3.5 w-3.5" />
-                  <span>SpecGuard Standards Registry</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Tab Viewport Panels */}
-            {activeTab === 'findings' && (
-              <FindingsList
-                findings={auditResult.findings}
-                onOpenStandardDetail={(isNum) => setSelectedStandard(isNum)}
-                onAdjudicate={(finding) => setAdjudicatingFinding(finding)}
-              />
-            )}
-
-            {activeTab === 'requirements' && (
-              <RequirementsTable
-                requirements={auditResult.requirements || []}
-                onOpenStandardDetail={(isNum) => setSelectedStandard(isNum)}
-              />
-            )}
-
-            {activeTab === 'graph' && (
-              <DependencyGraph
-                documentId={auditResult.document_id}
-                onOpenStandardDetail={(isNum) => setSelectedStandard(isNum)}
-              />
-            )}
-
-            {activeTab === 'catalog' && (
-              <StandardsCatalog
-                onSelectStandard={(isNum) => setSelectedStandard(isNum)}
-              />
-            )}
+      {/* 3. Main Workspace */}
+      <main className="flex-1 pb-16">
+        {loading ? (
+          <div className="py-24 text-center">
+            <Loader2 className="w-8 h-8 text-slate-400 animate-spin mx-auto mb-3" />
+            <h2 className="text-sm font-semibold text-slate-800">
+              Evaluating Technical Scope & Standards Database...
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              Matching assertions against BIS Gazette editions, QCO orders, and GFR 2017 rules.
+            </p>
           </div>
-        )}
-
-        {/* Catalog View when no audit has been run */}
-        {!auditResult && activeTab === 'catalog' && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <button
-                onClick={() => setActiveTab('findings')}
-                className="text-xs text-blue-400 hover:text-blue-300 font-mono flex items-center gap-1.5 cursor-pointer"
-              >
-                ← Return to Tender Specification Audit
-              </button>
-            </div>
-            <StandardsCatalog
-              onSelectStandard={(isNum) => setSelectedStandard(isNum)}
-            />
-          </div>
-        )}
-
-        {/* Empty State when no audit is run yet and not viewing catalog */}
-        {!auditResult && activeTab !== 'catalog' && !loading && (
-          <div className="bg-gov-900/60 border border-slate-800/80 rounded-lg p-10 text-center space-y-4">
-            <div className="p-3 bg-blue-950/40 border border-blue-900/60 rounded-full w-max mx-auto text-blue-400">
-              <Shield className="h-8 w-8" />
-            </div>
-            <div className="max-w-md mx-auto space-y-1.5">
-              <h3 className="text-sm font-semibold text-slate-200">
-                Awaiting Tender Specification Input
-              </h3>
-              <p className="text-xs text-slate-400 font-sans">
-                Paste tender procurement clauses, BoQ extracts, or choose one of the official benchmark tenders above to verify statutory compliance against gazetted Indian Standards.
-              </p>
-            </div>
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <button
-                onClick={() => handleSelectDemoId(DEMO_TENDERS[0].id)}
-                className="px-3 py-1.5 bg-gov-950 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 rounded font-mono transition-colors cursor-pointer"
-              >
-                Load NHAI Bridge (IS 456)
-              </button>
-              <button
-                onClick={() => handleSelectDemoId(DEMO_TENDERS[1].id)}
-                className="px-3 py-1.5 bg-gov-950 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 rounded font-mono transition-colors cursor-pointer"
-              >
-                Load CPWD Rebar (IS 1786)
-              </button>
-            </div>
-          </div>
+        ) : auditResult ? (
+          <StandardsRegimeView
+            auditResult={auditResult}
+            onOpenStandardDetail={(isNumber) => setSelectedStandard(isNumber)}
+            onAdjudicate={(finding) => setAdjudicatingFinding(finding)}
+          />
+        ) : (
+          <DocumentIntake
+            onAnalyze={handleAnalyze}
+            isLoading={loading}
+          />
         )}
       </main>
 
-      {/* Modals & Drawers */}
-      <StandardDetailModal
-        isNumber={selectedStandard}
-        onClose={() => setSelectedStandard(null)}
-      />
+      {/* 4. In-Situ Standard Inspector Slide-Over */}
+      {selectedStandard && (
+        <StandardDetailModal
+          isNumber={selectedStandard}
+          onClose={() => setSelectedStandard(null)}
+        />
+      )}
 
-      {auditResult && adjudicatingFinding && (
+      {/* 5. Human Sovereign Adjudication Dialog */}
+      {adjudicatingFinding && auditResult && (
         <AdjudicationModal
           documentId={auditResult.document_id}
           finding={adjudicatingFinding}
           onClose={() => setAdjudicatingFinding(null)}
-          onAdjudicated={(updated) => setAuditResult(updated)}
+          onAdjudicated={handleAdjudicated}
         />
       )}
 
-      {/* Sovereign System Telemetry Strip */}
-      <footer className="mt-auto border-t border-slate-800 bg-gov-950 py-3 px-6 text-[11px] font-mono text-slate-500 flex flex-col md:flex-row items-center justify-between gap-2">
-        <div className="flex items-center gap-4">
-          <span>INSTITUTION: Bureau of Indian Standards (BIS)</span>
-          <span className="hidden md:inline">•</span>
-          <span>ENGINE: SpecGuard Deterministic Rulebook</span>
-          <span className="hidden md:inline">•</span>
-          <span>INTELLIGENCE: OmniRoute Boundary Isolated</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span>PORT: 8000 (REST) / 5173 (Vite)</span>
-          <span>•</span>
-          <span className="text-emerald-500 font-semibold">SOVEREIGNTY SEAL ACTIVE</span>
+      {/* 6. Conformance Dossier Modal (Print / Export) */}
+      {isDossierOpen && auditResult && (
+        <DossierModal
+          auditResult={auditResult}
+          onClose={() => setIsDossierOpen(false)}
+          onOpenStandardDetail={(isNumber) => setSelectedStandard(isNumber)}
+        />
+      )}
+
+      {/* 7. Restrained Footer */}
+      <footer className="border-t border-black/20 bg-transparent py-5 text-center text-xs text-slate-900 font-medium">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div>
+            Bureau of Indian Standards Act 2016 & General Financial Rules 2017
+          </div>
+          <div className="text-[11px] text-slate-800 font-mono font-semibold">
+            MaanakSetu Sovereign Standards Engine
+          </div>
         </div>
       </footer>
     </div>
