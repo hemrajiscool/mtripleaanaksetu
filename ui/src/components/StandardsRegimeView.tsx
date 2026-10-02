@@ -12,17 +12,20 @@ import {
   UserCheck,
 } from 'lucide-react';
 import type { AuditResult, Finding } from '../types';
+import { t, type Language } from '../i18n';
 
 interface StandardsRegimeViewProps {
   auditResult: AuditResult;
   onOpenStandardDetail: (isNumber: string) => void;
   onAdjudicate: (finding: Finding) => void;
+  language?: Language;
 }
 
 export const StandardsRegimeView: React.FC<StandardsRegimeViewProps> = ({
   auditResult,
   onOpenStandardDetail,
   onAdjudicate,
+  language = 'en',
 }) => {
   const [filter, setFilter] = useState<'all' | 'action' | 'verified'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -147,15 +150,15 @@ export const StandardsRegimeView: React.FC<StandardsRegimeViewProps> = ({
 
           <div className="mt-4 flex flex-wrap items-center gap-y-2 gap-x-6 text-xs text-slate-600">
             <div>
-              <span className="font-semibold text-slate-900">Standards Identified:</span>{' '}
+              <span className="font-semibold text-slate-900">{t('standardsIdentified', language)}:</span>{' '}
               <span className="font-mono font-bold">{totalStandardsCount}</span>
             </div>
             <div>
-              <span className="font-semibold text-slate-900">Action Required:</span>{' '}
+              <span className="font-semibold text-slate-900">{t('actionRequired', language)}:</span>{' '}
               <span className="font-mono font-bold text-rose-700">{actionableItems.length}</span>
             </div>
             <div>
-              <span className="font-semibold text-slate-900">Verified Current:</span>{' '}
+              <span className="font-semibold text-slate-900">{t('verifiedCurrent', language)}:</span>{' '}
               <span className="font-mono font-bold text-emerald-700">{verifiedItems.length}</span>
             </div>
             <div className="flex items-center gap-1 font-mono text-[11px] text-slate-500">
@@ -164,7 +167,7 @@ export const StandardsRegimeView: React.FC<StandardsRegimeViewProps> = ({
                 type="button"
                 onClick={() => handleCopy(auditResult.sha256_digest, 'hash')}
                 title="Copy SHA-256 state fingerprint"
-                className="hover:text-slate-900 transition-colors flex items-center gap-1"
+                className="hover:text-slate-900 transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <span>{auditResult.sha256_digest.slice(0, 16)}...</span>
                 {copiedId === 'hash' ? (
@@ -184,24 +187,24 @@ export const StandardsRegimeView: React.FC<StandardsRegimeViewProps> = ({
           <button
             type="button"
             onClick={() => setFilter('all')}
-            className={`px-3 py-1.5 transition-all ${
+            className={`px-3 py-1.5 transition-all cursor-pointer ${
               filter === 'all'
                 ? 'bg-black text-white font-semibold'
                 : 'text-slate-700 hover:text-black'
             }`}
           >
-            All Standards ({totalStandardsCount})
+            {language === 'hi' ? 'सभी मानक' : 'All Standards'} ({totalStandardsCount})
           </button>
           <button
             type="button"
             onClick={() => setFilter('action')}
-            className={`px-3 py-1.5 transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 transition-all flex items-center gap-1.5 cursor-pointer ${
               filter === 'action'
                 ? 'bg-rose-700 text-white font-semibold'
                 : 'text-slate-700 hover:text-rose-700'
             }`}
           >
-            <span>Action Required</span>
+            <span>{t('actionRequired', language)}</span>
             {actionableItems.length > 0 && (
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                 filter === 'action' ? 'bg-white text-rose-700' : 'bg-rose-100 text-rose-800'
@@ -213,13 +216,13 @@ export const StandardsRegimeView: React.FC<StandardsRegimeViewProps> = ({
           <button
             type="button"
             onClick={() => setFilter('verified')}
-            className={`px-3 py-1.5 transition-all ${
+            className={`px-3 py-1.5 transition-all cursor-pointer ${
               filter === 'verified'
                 ? 'bg-emerald-700 text-white font-semibold'
                 : 'text-slate-700 hover:text-emerald-700'
             }`}
           >
-            Verified Current ({verifiedItems.length})
+            {t('verifiedCurrent', language)} ({verifiedItems.length})
           </button>
         </div>
 

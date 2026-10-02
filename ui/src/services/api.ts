@@ -99,10 +99,51 @@ export function getDossierPdfUrl(documentId: string): string {
   return `${API_BASE}/dossier/${encodeURIComponent(documentId)}/pdf`;
 }
 
-export async function verifyDigest(sha256Digest: string): Promise<{ valid: boolean; document_id?: string; gate_status?: string }> {
+export interface VerificationDetails {
+  valid: boolean;
+  sha256_digest: string;
+  document_id?: string;
+  document_title?: string;
+  gate_status?: string;
+  generated_at?: string;
+  findings_count?: number;
+  verification_authority?: string;
+}
+
+export interface AssistantChatResponse {
+  reply: string;
+  model_used: string;
+  citations: string[];
+}
+
+export async function verifyDigest(sha256Digest: string): Promise<VerificationDetails> {
   const res = await fetch(`${API_BASE}/verify/${encodeURIComponent(sha256Digest)}`);
   if (!res.ok) {
-    return { valid: false };
+    return { valid: false, sha256_digest: sha256Digest };
   }
   return res.json();
 }
+
+export async function askAssistant(
+  messages: { role: string; content: string }[],
+  documentId?: string,
+  context?: string
+): Promise<AssistantChatResponse> {
+  const res = await fetch(`${API_BASE}/assistant/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      messages,
+      document_id: documentId,
+      context,
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || 'Procurement Assistant request failed.');
+  }
+
+  return res.json();
+}
+

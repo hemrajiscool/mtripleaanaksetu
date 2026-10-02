@@ -325,3 +325,23 @@ async def test_audit_returns_structured_requirements(api_client: AsyncClient):
     assert "IS 1786:2008" in req["cited_standards"] or "IS 1786" in req["cited_standards"]
     assert req["segment_id"] != ""
 
+
+@pytest.mark.asyncio
+async def test_assistant_chat_endpoint(api_client: AsyncClient):
+    """Verify that POST /api/assistant/chat returns statutory guidance."""
+    payload = {
+        "messages": [
+            {"role": "user", "content": "Why is UltraTech brand prohibited under GFR 144(i)?"}
+        ],
+        "document_id": "DEMO-NHAI-BRIDGE-01",
+    }
+    res = await api_client.post("/api/assistant/chat", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "reply" in data
+    assert len(data["reply"]) > 20
+    assert "GFR 2017" in data["reply"] or "144(i)" in data["reply"]
+    assert "citations" in data
+    assert len(data["citations"]) > 0
+
+
