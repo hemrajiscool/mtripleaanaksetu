@@ -16,7 +16,7 @@ from maanaksetu.engine.orchestrator import AuditPipeline, compute_state_digest
 from maanaksetu.knowledge.graph import export_subgraph_for_flow
 from maanaksetu.knowledge.repository import get_standard_edition, list_standards
 
-router = APIRouter(prefix="/api", tags=["Audit Gateway"])
+router = APIRouter(tags=["Audit Gateway"])
 
 
 class AuditRequest(BaseModel):

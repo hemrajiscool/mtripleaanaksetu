@@ -132,7 +132,8 @@ def create_app(db_path: Optional[str | Path] = None) -> FastAPI:
                 )
         return await call_next(request)
 
-    # Include Routes
+    # Include Routes under both /api and root / for resilience across deployment topologies
+    app.include_router(router, prefix="/api")
     app.include_router(router)
 
     # Initialize app state eagerly for ASGI test clients
