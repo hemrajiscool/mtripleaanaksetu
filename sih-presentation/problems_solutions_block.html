@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Problems & Our Solutions — High Contrast & Large Typography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #000000;
+      padding: 16px;
+      margin: 0;
+      width: 920px;
+      height: 870px;
+      overflow: hidden;
+    }
+
+    /* ENLARGED & HIGH-CONTRAST LEFT CONTAINER */
+    .left-container {
+      background: #f0fdf4; /* Crisp pale green with high contrast */
+      border: 3px solid #000000;
+      border-radius: 20px;
+      padding: 22px 24px;
+      box-shadow: 5px 5px 0px #000000;
+      width: 888px;
+      height: 838px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .left-title {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .title-green {
+      color: #047857; /* Deep, high-contrast forest green (WCAG AAA) */
+    }
+
+    .left-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .prob-card {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 16px;
+      padding: 18px 20px;
+      box-shadow: 3.5px 3.5px 0px #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .prob-card-title {
+      font-size: 20.5px;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #000000;
+      letter-spacing: -0.3px;
+      margin-bottom: 10px;
+    }
+
+    /* SEMANTIC BADGES FOR MAXIMUM READABILITY */
+    .defect-badge {
+      display: inline-block;
+      background: #ffe4e6;
+      color: #9f1239;
+      border: 1.5px solid #f43f5e;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+    .solution-badge {
+      display: inline-block;
+      background: #dcfce7;
+      color: #14532d;
+      border: 1.5px solid #22c55e;
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 10px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .prob-desc {
+      font-size: 16px;
+      line-height: 1.42;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+    .prob-desc strong {
+      color: #000000;
+      font-weight: 800;
+    }
+
+    .sol-bullets {
+      font-size: 16px;
+      line-height: 1.44;
+      color: #0f172a;
+    }
+    .sol-bullets strong {
+      font-weight: 800;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PROBLEMS & OUR SOLUTIONS CONTAINER -->
+  <section class="left-container">
+    <h2 class="left-title">
+      <span>Problems</span>
+      <span class="title-green">&amp; our Solutions</span>
+    </h2>
+
+    <div class="left-cards-grid">
+      <!-- CARD 1 -->
+      <article class="prob-card">
+        <div>
+          <h3 class="prob-card-title">Superseded Standards &amp; Legacy Citations</h3>
+          <div class="defect-badge">Statutory Defect</div>
+          <p class="prob-desc">
+            Tenders cite withdrawn codes (e.g. <strong>IS 269:1989 cement</strong>, <strong>IS 1180:1989 transformers</strong>), risking structural failure and statutory invalidation under <strong>GFR Rule 173</strong>.
+          </p>
+        </div>
+        <div>
+          <div class="solution-badge">MaanakSetu Remedy</div>
+          <div class="sol-bullets">
+            &bull; Automated <strong>Gazette reconciliation</strong> against active QCO standards.<br>
+            &bull; <strong>Normative reference DAG</strong> resolving cascading sub-clause dependencies.
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 2 -->
+      <article class="prob-card">
+        <div>
+          <h3 class="prob-card-title">No Centralized Real-Time Standards Registry</h3>
+          <div class="defect-badge">Statutory Defect</div>
+          <p class="prob-desc">
+            Gazetted amendments, QCOs, and validity dates are scattered across disparate PDFs, leaving officers without instant verification tools.
+          </p>
+        </div>
+        <div>
+          <div class="solution-badge">MaanakSetu Remedy</div>
+          <div class="sol-bullets">
+            &bull; <strong>MaanakSetu Knowledge Graph</strong> with real-time BIS Gazette synchronization.<br>
+            &bull; Sub-second <strong>structured lookup</strong> across 22,000+ national standards.
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 3 -->
+      <article class="prob-card">
+        <div>
+          <h3 class="prob-card-title">Restrictive Brand Exclusions (GFR 144(i))</h3>
+          <div class="defect-badge">Statutory Defect</div>
+          <p class="prob-desc">
+            Tenders mandate proprietary vendor makes (<strong>"UltraTech only"</strong>, <strong>"Philips LED only"</strong>), violating GFR 144(i) and triggering CVC vigilance inquiries.
+          </p>
+        </div>
+        <div>
+          <div class="solution-badge">MaanakSetu Remedy</div>
+          <div class="sol-bullets">
+            &bull; <strong>NER + 1,200+ OEM Brand Dict</strong> to intercept proprietary bias.<br>
+            &bull; Auto-translation into <strong>neutral performance parameters</strong>.
+          </div>
+        </div>
+      </article>
+
+      <!-- CARD 4 -->
+      <article class="prob-card">
+        <div>
+          <h3 class="prob-card-title">Lack of Decision Support System for Corrigenda</h3>
+          <div class="defect-badge">Statutory Defect</div>
+          <p class="prob-desc">
+            Manual compliance audits take <strong>5&ndash;7 days per tender</strong>; drafting legal corrigenda is ambiguous, error-prone, and causes litigation delays.
+          </p>
+        </div>
+        <div>
+          <div class="solution-badge">MaanakSetu Remedy</div>
+          <div class="sol-bullets">
+            &bull; Rule-based <strong>Decision Support System (DSS)</strong> generating legal corrigenda clauses.<br>
+            &bull; <strong>SHA-256 verified audit dossier</strong> for official vigilance defense.
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</body>
+</html>

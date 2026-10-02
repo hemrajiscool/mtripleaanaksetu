@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slide 3 — Technical Approach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #000000;
+      padding: 20px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* TOP HEADER */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+      flex-shrink: 0;
+    }
+    .team-pill {
+      border: 2px solid #000000;
+      border-radius: 9999px;
+      padding: 6px 28px;
+      background: #ffffff;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+    .slide-title {
+      font-size: 44px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+    }
+    .sih-logo-img {
+      height: 52px;
+      object-fit: contain;
+    }
+
+    /* MAIN 2-COLUMN SPLIT: 800px LEFT VS 1052px RIGHT */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 800px 1052px;
+      gap: 24px;
+      height: 954px;
+      flex: 1;
+    }
+
+    /* LEFT COLUMN: BLACKGOLD INSPIRED */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      height: 954px;
+      gap: 14px;
+    }
+
+    /* TECHNICAL COMPONENTS CARD (STREAMLINED & ENLARGED) */
+    .components-card {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 16px;
+      padding: 18px 22px;
+      box-shadow: 3.5px 3.5px 0px #000000;
+      height: 710px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .components-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #00be62;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      border-bottom: 2px solid #000000;
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .components-tag {
+      background: #000000;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .components-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      padding-top: 2px;
+      padding-bottom: 2px;
+    }
+    .comp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .comp-bullet {
+      color: #00be62;
+      font-weight: 900;
+      font-size: 26px;
+      line-height: 1;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .comp-body {
+      flex: 1;
+    }
+    .comp-header-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .comp-name {
+      font-weight: 900;
+      font-size: 21.5px;
+      color: #000000;
+      letter-spacing: -0.3px;
+    }
+    .comp-role {
+      font-weight: 800;
+      font-size: 19px;
+      color: #0284c7;
+    }
+    .comp-tools {
+      color: #1e293b;
+      font-size: 17.5px;
+      font-weight: 600;
+      line-height: 1.36;
+      margin-top: 4px;
+    }
+
+    /* LOGOS GRID CARD (NO WORDINGS - 3 ROWS) */
+    .logos-card {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 16px;
+      padding: 12px 20px;
+      box-shadow: 3.5px 3.5px 0px #000000;
+      height: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      flex-shrink: 0;
+    }
+    .logos-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 4px 6px;
+    }
+    .logo-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      width: 48px;
+      flex-shrink: 0;
+    }
+    .logo-item svg, .logo-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* RIGHT COLUMN: COOKEDCODERS INSPIRED MVP UI */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      height: 954px;
+      gap: 14px;
+    }
+
+    /* WORKSTATION CARD CONTAINER */
+    .ui-showcase-card {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-radius: 16px;
+      box-shadow: 3.5px 3.5px 0px #000000;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 470px;
+      flex-shrink: 0;
+    }
+    .ui-showcase-header {
+      background: #00a4c1;
+      color: #ffffff;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid #000000;
+      height: 48px;
+      flex-shrink: 0;
+    }
+    .ui-showcase-title {
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ui-badge-live {
+      background: #00af55;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 3px 12px;
+      border-radius: 9999px;
+      border: 1.5px solid #000000;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* WINDOW CHROME & SCREENSHOT CONTAINER (NO URL BAR) */
+    .window-chrome {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+    .window-dots-bar {
+      background: #f1f5f9;
+      border-bottom: 1.5px solid #000000;
+      padding: 4px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .win-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid #000000;
+    }
+
+    .screenshot-viewport {
+      height: 364px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      background: #f8fafc;
+      flex-shrink: 0;
+    }
+    .viewport-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      object-position: top center;
+    }
+    .caption-footer {
+      background: #ffffff;
+      border-top: 1.5px solid #000000;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 38px;
+      flex-shrink: 0;
+    }
+    .caption-pill {
+      background: #e7ffdd;
+      border: 1px solid #00af55;
+      color: #00873d;
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER BAR -->
+  <header class="header-bar">
+    <div class="team-pill">PARALLAX NEXUS</div>
+    <h1 class="slide-title">TECHNICAL APPROACH</h1>
+    <img src="assets/sih_logo.png" class="sih-logo-img" alt="Smart India Hackathon 2025" />
+  </header>
+
+  <!-- MAIN TWO-COLUMN SPLIT -->
+  <main class="main-grid">
+
+    <!-- LEFT COLUMN: BLACKGOLD ARCHITECTURAL APPROACH (STREAMLINED & ENLARGED) -->
+    <section class="left-col">
+
+      <!-- TECHNICAL COMPONENTS & FRAMEWORKS LIST (6 POWERHOUSE PILLARS) -->
+      <article class="components-card">
+        <div class="components-title">
+          <span>Technical components and their frameworks :</span>
+          <span class="components-tag">MaanakSetu Engine</span>
+        </div>
+
+        <ul class="components-list">
+          
+          <!-- COMPONENT 1 -->
+          <li class="comp-item">
+            <span class="comp-bullet">•</span>
+            <div class="comp-body">
+              <div class="comp-header-line">
+                <span class="comp-name">Dual Ingestion Parser</span>
+                <span class="comp-role">(Document Extraction):</span>
+              </div>
+              <div class="comp-tools">
+                PyMuPDF (&lt;15ms fast-path text) + IBM Docling TableFormer (multi-column BOQ schedules)
+              </div>
+            </div>
+          </li>
+
+          <!-- COMPONENT 2 -->
+          <li class="comp-item">
+            <span class="comp-bullet">•</span>
+            <div class="comp-body">
+              <div class="comp-header-line">
+                <span class="comp-name">Normative Reference Graph</span>
+                <span class="comp-role">(Dependency Reasoning):</span>
+              </div>
+              <div class="comp-tools">
+                NetworkX Directed Acyclic Graph (DAG) for multi-hop cascading obsolescence alerts (O(V+E))
+              </div>
+            </div>
+          </li>
+
+          <!-- COMPONENT 3 -->
+          <li class="comp-item">
+            <span class="comp-bullet">•</span>
+            <div class="comp-body">
+              <div class="comp-header-line">
+                <span class="comp-name">SpecGuard AST Invariant Engine</span>
+                <span class="comp-role">(Deterministic Gating):</span>
+              </div>
+              <div class="comp-tools">
+                Python AST boundary validator (evaluates physical, chemical &amp; dimensional limits with zero hallucination)
+              </div>
+            </div>
+          </li>
+
+          <!-- COMPONENT 4 -->
+          <li class="comp-item">
+            <span class="comp-bullet">•</span>
+            <div class="comp-body">
+              <div class="comp-header-line">
+                <span class="comp-name">Brand Exclusion Interceptor</span>
+                <span class="comp-role">(Statutory Integrity):</span>
+              </div>
+              <div class="comp-tools">
+                NER + 1,200+ OEM Brand Dictionary enforcing GFR 2017 Rule 144(i) non-restrictive mandates
+              </div>
+            </div>
+          </li>
+
+          <!-- COMPONENT 5 -->
+          <li class="comp-item">
+            <span class="comp-bullet">•</span>
+            <div class="comp-body">
+              <div class="comp-header-line">
+                <span class="comp-name">Corrigenda Drafting Studio</span>
+                <span class="comp-role">(Statutory Synthesis):</span>
+              </div>
+              <div class="comp-tools">
+                GFR Rule 173(v) Redline Synthesis Engine (auto-generates gazetted replacement clauses)
+              </div>
+            </div>
+          </li>
+
+          <!-- COMPONENT 6 -->
+          <li class="comp-item">
+            <span class="comp-bullet">•</span>
+            <div class="comp-body">
+              <div class="comp-header-line">
+                <span class="comp-name">Cryptographic Dossier Engine</span>
+                <span class="comp-role">(Vigilance Defense):</span>
+              </div>
+              <div class="comp-tools">
+                typst-py sub-second reproducible SHA-256 PDF dossiers for official CVC/CAG audit defense
+              </div>
+            </div>
+          </li>
+
+        </ul>
+      </article>
+
+      <!-- TECH STACK LOGOS CARD (PURE LOGOS ONLY - NO WORDINGS - 3 ROWS) -->
+      <article class="logos-card">
+        
+        <!-- ROW 1: AI / DATA / SCIENTIFIC -->
+        <div class="logos-row">
+          <!-- PYTHON -->
+          <div class="logo-item" title="Python">
+            <svg viewBox="0 0 110 110" fill="none">
+              <path d="M54.5 9.5C27.5 9.5 29 21.2 29 21.2L29.1 33.4H55V37H17.2C17.2 37 9.5 36.1 9.5 63.2C9.5 90.3 16.2 89.2 16.2 89.2H24.3V77.7C24.3 77.7 23.9 63.9 38 63.9H63.6C63.6 63.9 76.5 64.3 76.5 51.6V22.2C76.5 22.2 78.4 9.5 54.5 9.5ZM37.7 18.2C40.6 18.2 43 20.6 43 23.5C43 26.4 40.6 28.8 37.7 28.8C34.8 28.8 32.4 26.4 32.4 23.5C32.4 20.6 34.8 18.2 37.7 18.2Z" fill="#387EB8"/>
+              <path d="M55.5 100.5C82.5 100.5 81 88.8 81 88.8L80.9 76.6H55V73H92.8C92.8 73 100.5 73.9 100.5 46.8C100.5 19.7 93.8 20.8 93.8 20.8H85.7V32.3C85.7 32.3 86.1 46.1 72 46.1H46.4C46.4 46.1 33.5 45.7 33.5 58.4V87.8C33.5 87.8 31.6 100.5 55.5 100.5ZM72.3 91.8C69.4 91.8 67 89.4 67 86.5C67 83.6 69.4 81.2 72.3 81.2C75.2 81.2 77.6 83.6 77.6 86.5C77.6 89.4 75.2 91.8 72.3 91.8Z" fill="#FFE052"/>
+            </svg>
+          </div>
+
+          <!-- PYTORCH -->
+          <div class="logo-item" title="PyTorch">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path d="M54 12C33 12 16 29 16 50C16 71 33 88 54 88C75 88 92 71 92 50H78C78 63 67 74 54 74C41 74 30 63 30 50C30 37 41 26 54 26C62 26 69 30 73 36L64 45H90V19L81 28C74 18 65 12 54 12Z" fill="#EE4C2C"/>
+              <circle cx="70" cy="22" r="5" fill="#EE4C2C"/>
+            </svg>
+          </div>
+
+          <!-- HUGGING FACE -->
+          <div class="logo-item" title="Hugging Face">
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="46" fill="#FFD21E"/>
+              <circle cx="34" cy="42" r="6" fill="#000000"/>
+              <circle cx="66" cy="42" r="6" fill="#000000"/>
+              <path d="M30 62C36 74 64 74 70 62" stroke="#000000" stroke-width="6" stroke-linecap="round"/>
+              <path d="M12 48C8 38 12 28 20 30C26 32 24 44 14 50" fill="#FF9D00"/>
+              <path d="M88 48C92 38 88 28 80 30C74 32 76 44 86 50" fill="#FF9D00"/>
+            </svg>
+          </div>
+
+          <!-- SQLITE -->
+          <div class="logo-item" title="SQLite">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path d="M50 10C25 10 10 20 10 32V68C10 80 25 90 50 90C75 90 90 80 90 68V32C90 20 75 10 50 10Z" fill="#003B57"/>
+              <ellipse cx="50" cy="32" rx="35" ry="16" fill="#00ADEF"/>
+              <path d="M15 50C15 60 30 68 50 68C70 68 85 60 85 50" stroke="#FFFFFF" stroke-width="4"/>
+              <path d="M15 68C15 78 30 86 50 86C70 86 85 78 85 68" stroke="#FFFFFF" stroke-width="4"/>
+            </svg>
+          </div>
+
+          <!-- NETWORKX / GRAPH -->
+          <div class="logo-item" title="NetworkX Graph">
+            <svg viewBox="0 0 100 100" fill="none">
+              <line x1="25" y1="30" x2="75" y2="25" stroke="#1E293B" stroke-width="4"/>
+              <line x1="25" y1="30" x2="50" y2="75" stroke="#1E293B" stroke-width="4"/>
+              <line x1="75" y1="25" x2="50" y2="75" stroke="#1E293B" stroke-width="4"/>
+              <line x1="75" y1="25" x2="80" y2="70" stroke="#1E293B" stroke-width="4"/>
+              <line x1="50" y1="75" x2="80" y2="70" stroke="#1E293B" stroke-width="4"/>
+              <circle cx="25" cy="30" r="14" fill="#0284C7"/>
+              <circle cx="75" cy="25" r="12" fill="#00AF55"/>
+              <circle cx="50" cy="75" r="16" fill="#6366F1"/>
+              <circle cx="80" cy="70" r="10" fill="#F59E0B"/>
+            </svg>
+          </div>
+
+          <!-- DUCKDB -->
+          <div class="logo-item" title="DuckDB">
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="46" fill="#FFF000"/>
+              <circle cx="38" cy="38" r="6" fill="#000000"/>
+              <path d="M42 46C55 46 68 52 76 62C68 68 55 70 42 66C32 62 26 54 42 46Z" fill="#FF9900"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ROW 2: BACKEND & COMPUTE ENGINES -->
+        <div class="logos-row">
+          <!-- FASTAPI -->
+          <div class="logo-item" title="FastAPI">
+            <svg viewBox="0 0 100 100" fill="none">
+              <circle cx="50" cy="50" r="48" fill="#009688"/>
+              <path d="M54 22L28 54H48L44 78L72 46H50L54 22Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- DOCKER -->
+          <div class="logo-item" title="Docker">
+            <svg viewBox="0 0 100 100" fill="none">
+              <rect x="32" y="32" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="45" y="32" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="58" y="32" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="19" y="44" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="32" y="44" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="45" y="44" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="58" y="44" width="10" height="9" rx="1" fill="#2496ED"/>
+              <rect x="71" y="44" width="10" height="9" rx="1" fill="#2496ED"/>
+              <path d="M96 52C94 52 86 53 82 58C78 57 73 57 68 58C68 57 60 57 55 57H10C6 57 2 61 2 66C2 76 11 88 38 88C68 88 88 77 92 60C96 60 98 56 96 52Z" fill="#2496ED"/>
+            </svg>
+          </div>
+
+          <!-- NGINX -->
+          <div class="logo-item" title="NGINX">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path d="M50 4L90 27V73L50 96L10 73V27L50 4Z" fill="#009639"/>
+              <path d="M30 30V70L70 30V70" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          <!-- REDIS -->
+          <div class="logo-item" title="Redis">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path d="M50 8L88 28V72L50 92L12 72V28L50 8Z" fill="#D82C20"/>
+              <path d="M50 8L88 28L50 48L12 28L50 8Z" fill="#EF4444"/>
+              <path d="M50 48L88 28V46L50 66V48Z" fill="#B91C1C"/>
+              <circle cx="50" cy="35" r="4" fill="#FFFFFF"/>
+              <circle cx="68" cy="25" r="4" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- TYPST -->
+          <div class="logo-item" title="Typst">
+            <svg viewBox="0 0 100 100" fill="none">
+              <rect width="100" height="100" rx="20" fill="#239DAD"/>
+              <path d="M30 28H70V40H56V74H44V40H30V28Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- PYMUPDF / PDF -->
+          <div class="logo-item" title="PyMuPDF">
+            <svg viewBox="0 0 100 100" fill="none">
+              <rect x="20" y="12" width="60" height="76" rx="8" fill="#E11D48"/>
+              <path d="M35 34H65M35 50H65M35 66H52" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- ROW 3: FRONTEND & WORKSTATION PLATFORM -->
+        <div class="logos-row">
+          <!-- REACT -->
+          <div class="logo-item" title="React">
+            <svg viewBox="-11.5 -10.23174 23 20.46348" fill="none">
+              <circle cx="0" cy="0" r="2.05" fill="#61DAFB"/>
+              <g stroke="#61DAFB" stroke-width="1" fill="none">
+                <ellipse rx="11" ry="4.2"/>
+                <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
+                <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
+              </g>
+            </svg>
+          </div>
+
+          <!-- TYPESCRIPT -->
+          <div class="logo-item" title="TypeScript">
+            <svg viewBox="0 0 100 100">
+              <rect width="100" height="100" rx="16" fill="#3178C6"/>
+              <path d="M33 46V41H57V46H48V78H42V46H33ZM60 72.5C62.5 76.5 67 78.5 72.5 78.5C78.5 78.5 83 75.5 83 70C83 63.5 78 61.5 72 59C66.5 56.5 62 54 62 48.5C62 43.5 66 39.5 72.5 39.5C77 39.5 80.5 41.5 83 45L78.5 48.5C76.5 45.5 74 44.5 72 44.5C69.5 44.5 67.5 46 67.5 48.5C67.5 51.5 70.5 53 76 55.5C82 58 88.5 61 88.5 69.5C88.5 76 83 83 72.5 83C65.5 83 60.5 79.5 57 74.5L60 72.5Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- TAILWIND CSS -->
+          <div class="logo-item" title="Tailwind CSS">
+            <svg viewBox="0 0 100 60" fill="none">
+              <path d="M26 12C15 12 8 20 5 36C10 28 17 25 23 27C27 28 31 31 35 35C41 41 48 48 65 48C76 48 83 40 86 24C81 32 74 35 68 33C64 32 60 29 56 25C50 19 43 12 26 12ZM68 12C57 12 50 20 47 36C52 28 59 25 65 27C69 28 73 31 77 35C83 41 90 48 107 48C118 48 125 40 128 24C123 32 116 35 110 33C106 32 102 29 98 25C92 19 85 12 68 12Z" fill="#38BDF8"/>
+            </svg>
+          </div>
+
+          <!-- VITE -->
+          <div class="logo-item" title="Vite">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path d="M96 17L53 92C51 95 47 95 45 92L3 17C1 14 3 10 7 11L50 20L92 11C96 10 98 14 96 17Z" fill="url(#viteGradient)"/>
+              <path d="M68 6L33 39H48L37 68L70 31H54L68 6Z" fill="#FFD62E"/>
+              <defs>
+                <linearGradient id="viteGradient" x1="5" y1="12" x2="88" y2="85" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#41D1FF"/>
+                  <stop offset="1" stop-color="#BD34FE"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+
+          <!-- GIT -->
+          <div class="logo-item" title="Git">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path d="M93 43L57 7C53 3 47 3 43 7L7 43C3 47 3 53 7 57L43 93C47 97 53 97 57 93L93 57C97 53 97 47 93 43Z" fill="#F05032"/>
+              <path d="M68 46C65 46 62 48 61 51L47 37C48 35 48 33 46 31C43 28 38 28 35 31C32 34 32 39 35 42C37 44 40 44 42 43L55 56C54 58 54 60 55 62L41 76C39 75 36 75 34 77C31 80 31 85 34 88C37 91 42 91 45 88C48 85 47 81 44 79L58 65C60 66 63 66 65 64C68 62 70 58 68 54C70 51 70 48 68 46Z" fill="#FFFFFF"/>
+            </svg>
+          </div>
+
+          <!-- GITHUB -->
+          <div class="logo-item" title="GitHub">
+            <svg viewBox="0 0 100 100" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M50 10C27.9 10 10 27.9 10 50C10 67.7 21.5 82.7 37.4 88C39.4 88.4 40.1 87.1 40.1 86.1C40.1 85.2 40.1 82.2 40 78.5C28.9 80.9 26.5 73.2 26.5 73.2C24.7 68.6 22.1 67.4 22.1 67.4C18.5 64.9 22.4 65 22.4 65C26.4 65.3 28.5 69.1 28.5 69.1C32 75.1 37.8 73.4 40.1 72.3C40.4 69.8 41.5 68 42.6 67C33.7 66 24.4 62.6 24.4 47.3C24.4 42.9 26 39.3 28.5 36.5C28.1 35.5 26.7 31.4 28.9 25.9C28.9 25.9 32.3 24.8 40.1 30.1C43.3 29.2 46.7 28.8 50.1 28.8C53.5 28.8 56.9 29.2 60.1 30.1C67.9 24.8 71.3 25.9 71.3 25.9C73.5 31.4 72.1 35.5 71.7 36.5C74.3 39.3 75.8 42.9 75.8 47.3C75.8 62.7 66.5 66 57.5 67C59 68.3 60.3 70.8 60.3 74.6C60.3 80.1 60.3 84.5 60.3 86.1C60.3 87.1 61 88.4 63 88C78.9 82.7 90.4 67.7 90.4 50C90.4 27.9 72.5 10 50 10Z" fill="#181717"/>
+            </svg>
+          </div>
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- RIGHT COLUMN: COOKEDCODERS INSPIRED MVP UI ORIENTED (NHAI ABOVE, SELF AUDIT BELOW) -->
+    <section class="right-col">
+
+      <!-- TOP SCREENSHOT CARD: NHAI EXAMPLE -->
+      <article class="ui-showcase-card">
+        <div class="ui-showcase-header">
+          <div class="ui-showcase-title">
+            <span>Curated Domain Verification: NHAI Expressway Pavement</span>
+          </div>
+          <span class="ui-badge-live">Live Prototype Demo</span>
+        </div>
+
+        <div class="window-chrome">
+          <!-- TRAFFIC LIGHT DOTS ONLY (NO URL BAR) -->
+          <div class="window-dots-bar">
+            <div class="win-dot" style="background: #ff5f56;"></div>
+            <div class="win-dot" style="background: #ffbd2e;"></div>
+            <div class="win-dot" style="background: #27c93f;"></div>
+          </div>
+
+          <div class="screenshot-viewport">
+            <img src="assets/mvp_nhai_demo.png" class="viewport-img" alt="NHAI Expressway Conformance Review" />
+          </div>
+
+          <div class="caption-footer">
+            <span><strong>Defect Detected:</strong> Cites withdrawn standard <code>IS 269:1989</code> &amp; triggers cascading normative alert under parent <code>IS 456:2000</code>.</span>
+            <span class="caption-pill">GFR Rule 173(v) Action Required</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- BOTTOM SCREENSHOT CARD: SELF AUDIT EXAMPLE -->
+      <article class="ui-showcase-card">
+        <div class="ui-showcase-header" style="background: #00873d;">
+          <div class="ui-showcase-title">
+            <span>Domain-Agnostic Raw Clause Intake &amp; Standards Intelligence</span>
+          </div>
+          <span class="ui-badge-live" style="background: #00a4c1;">On-Demand Audit</span>
+        </div>
+
+        <div class="window-chrome">
+          <!-- TRAFFIC LIGHT DOTS ONLY (NO URL BAR) -->
+          <div class="window-dots-bar">
+            <div class="win-dot" style="background: #ff5f56;"></div>
+            <div class="win-dot" style="background: #ffbd2e;"></div>
+            <div class="win-dot" style="background: #27c93f;"></div>
+          </div>
+
+          <div class="screenshot-viewport">
+            <img src="assets/mvp_self_audit.png" class="viewport-img" alt="Domain-Agnostic Raw Clause Intake" />
+          </div>
+
+          <div class="caption-footer">
+            <span><strong>On-Demand Intake:</strong> Ingests arbitrary tender text, extracts technical assertions, and reconciles against active BIS Gazette QCOs.</span>
+            <span class="caption-pill" style="background: #e0f2fe; border-color: #0284c7; color: #0369a1;">Zero Domain Hardcoding</span>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+  </main>
+
+</body>
+</html>

@@ -4,23 +4,28 @@
 
 @layer base {
   body {
-    @apply bg-gov-950 text-slate-100 antialiased font-sans min-h-screen selection:bg-slate-700 selection:text-white;
+    background-color: #f386a1;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.42) 0.85px, transparent 0.85px);
+    background-size: 7px 7px;
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
   }
 
-  /* Custom scrollbar for dense regulatory tables */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0B0F19;
+    background: #f386a1;
   }
   ::-webkit-scrollbar-thumb {
-    background: #1E293B;
+    background: #1e1e1e;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #334155;
+    background: #000000;
   }
 }
-

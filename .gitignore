@@ -4,16 +4,34 @@ __pycache__/
 build/
 dist/
 wheels/
-*.egg-info
+*.egg-info/
 
 # Virtual environments
-.venv
+.venv/
 .pytest_cache/
+
+# Databases & local data
 *.sqlite
+*.sqlite3
 *.db
-*.pdf
-# Data and cache
 data/
-node_modules/
-dist/
+app_data/
+
+# Environment files
 .env
+.env.*
+.env.local
+.env.production
+.env.development
+!.env.example
+
+# Node / Frontend
+node_modules/
+ui/node_modules/
+dist/
+ui/dist/
+.npm/
+
+# Agent / Scratch logs
+scratch/
+.agent/

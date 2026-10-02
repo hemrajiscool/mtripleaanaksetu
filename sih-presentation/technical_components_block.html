@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MaanakSetu Technical Components Block</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #000000;
+      padding: 16px;
+      margin: 0;
+      width: 880px;
+      height: 780px;
+      overflow: hidden;
+    }
+
+    /* STANDALONE ENLARGED TECHNICAL COMPONENTS CARD */
+    .components-card {
+      background: #ffffff;
+      border: 3px solid #000000;
+      border-radius: 18px;
+      padding: 24px 28px;
+      box-shadow: 5px 5px 0px #000000;
+      width: 840px;
+      height: 740px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .components-title {
+      font-size: 25px;
+      font-weight: 900;
+      color: #00be62;
+      letter-spacing: -0.5px;
+      margin-bottom: 14px;
+      border-bottom: 2.5px solid #000000;
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .components-tag {
+      background: #000000;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .components-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    .comp-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .comp-bullet {
+      color: #00be62;
+      font-weight: 900;
+      font-size: 28px;
+      line-height: 1;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .comp-body {
+      flex: 1;
+    }
+    .comp-header-line {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .comp-name {
+      font-weight: 900;
+      font-size: 23px;
+      color: #000000;
+      letter-spacing: -0.3px;
+    }
+    .comp-role {
+      font-weight: 800;
+      font-size: 20px;
+      color: #0284c7;
+    }
+    .comp-tools {
+      color: #1e293b;
+      font-size: 18.5px;
+      font-weight: 600;
+      line-height: 1.38;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TECHNICAL COMPONENTS CARD -->
+  <article class="components-card">
+    <div class="components-title">
+      <span>Technical components and their frameworks :</span>
+      <span class="components-tag">MaanakSetu Engine</span>
+    </div>
+
+    <ul class="components-list">
+      <!-- 1. DUAL INGESTION PARSER -->
+      <li class="comp-item">
+        <span class="comp-bullet">&bull;</span>
+        <div class="comp-body">
+          <div class="comp-header-line">
+            <span class="comp-name">Dual Ingestion Parser</span>
+            <span class="comp-role">(Document Extraction):</span>
+          </div>
+          <div class="comp-tools">
+            PyMuPDF (&lt;15ms fast-path text) + IBM Docling TableFormer (multi-column BOQ schedules)
+          </div>
+        </div>
+      </li>
+
+      <!-- 2. NORMATIVE REFERENCE GRAPH -->
+      <li class="comp-item">
+        <span class="comp-bullet">&bull;</span>
+        <div class="comp-body">
+          <div class="comp-header-line">
+            <span class="comp-name">Normative Reference Graph</span>
+            <span class="comp-role">(Dependency Reasoning):</span>
+          </div>
+          <div class="comp-tools">
+            NetworkX Directed Acyclic Graph (DAG) for multi-hop cascading obsolescence alerts (O(V+E))
+          </div>
+        </div>
+      </li>
+
+      <!-- 3. SPECGUARD AST INVARIANT ENGINE -->
+      <li class="comp-item">
+        <span class="comp-bullet">&bull;</span>
+        <div class="comp-body">
+          <div class="comp-header-line">
+            <span class="comp-name">SpecGuard AST Invariant Engine</span>
+            <span class="comp-role">(Deterministic Gating):</span>
+          </div>
+          <div class="comp-tools">
+            Python AST boundary validator (physical, chemical &amp; dimensional limits with zero hallucination)
+          </div>
+        </div>
+      </li>
+
+      <!-- 4. BRAND EXCLUSION INTERCEPTOR -->
+      <li class="comp-item">
+        <span class="comp-bullet">&bull;</span>
+        <div class="comp-body">
+          <div class="comp-header-line">
+            <span class="comp-name">Brand Exclusion Interceptor</span>
+            <span class="comp-role">(Statutory Integrity):</span>
+          </div>
+          <div class="comp-tools">
+            NER + 1,200+ OEM Brand Dictionary enforcing GFR 2017 Rule 144(i) non-restrictive mandates
+          </div>
+        </div>
+      </li>
+
+      <!-- 5. CORRIGENDA DRAFTING STUDIO -->
+      <li class="comp-item">
+        <span class="comp-bullet">&bull;</span>
+        <div class="comp-body">
+          <div class="comp-header-line">
+            <span class="comp-name">Corrigenda Drafting Studio</span>
+            <span class="comp-role">(Statutory Synthesis):</span>
+          </div>
+          <div class="comp-tools">
+            GFR Rule 173(v) Redline Synthesis Engine (auto-generates gazetted replacement clauses)
+          </div>
+        </div>
+      </li>
+
+      <!-- 6. CRYPTOGRAPHIC DOSSIER ENGINE -->
+      <li class="comp-item">
+        <span class="comp-bullet">&bull;</span>
+        <div class="comp-body">
+          <div class="comp-header-line">
+            <span class="comp-name">Cryptographic Dossier Engine</span>
+            <span class="comp-role">(Vigilance Defense):</span>
+          </div>
+          <div class="comp-tools">
+            typst-py sub-second reproducible SHA-256 PDF dossiers for official CVC/CAG audit defense
+          </div>
+        </div>
+      </li>
+    </ul>
+  </article>
+
+</body>
+</html>

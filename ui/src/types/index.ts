@@ -4,6 +4,15 @@ export type GateStatus =
   | 'ACTION_REQUIRED_REVIEW'
   | 'VERIFIED_CONFORMANT';
 
+export type WorkstationView =
+  | 'overview'
+  | 'triage'
+  | 'standards'
+  | 'graph'
+  | 'invariants'
+  | 'corrigenda'
+  | 'dossier';
+
 export type DecisionState = 'CONFORMANT' | 'VIOLATION' | 'UNCERTAIN';
 
 export type ReviewState =

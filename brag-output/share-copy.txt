@@ -1,0 +1,35 @@
+# MaanakSetu (मानक सेतु) — Launch & Submission Pitch
+Engineered by Team Parallax Nexus
+
+## One-Line Summary
+A domain-agnostic sovereign standards recommendation and statutory verification engine for Indian public procurement, evaluating engineering specifications against BIS Gazette notifications, Quality Control Orders (QCOs), and General Financial Rules (GFR) 2017 in real time.
+
+---
+
+## Pitch Copy (Judge Presentation)
+"Hello judges, we are team Parallax Nexus. And we present you the solution of your PS: MaanakSetu."
+
+Over 90% of technical tenders in Indian public procurement cite obsolete standards, withdrawn Gazette revisions, or anti-competitive brand monopolies that lead to litigation, vendor lock-in, and severe structural failures.
+
+MaanakSetu is not a static demo or a hardcoded cement template. It is an industrial, domain-agnostic sovereign intelligence engine that analyzes raw tender clauses across Electrical Grid Infrastructure, Seismic Structural Engineering, Medical Equipment, and Highways:
+- Automatically detects and strips illegal proprietary brand exclusions under GFR Rule 144(i).
+- Identifies superseded and withdrawn BIS standards (e.g., superseding IS 1180:1989 with IS 1180 (Part 1):2014 per mandatory QCOs).
+- Validates deep quantitative physical constraints against BIS Gazette Amendments (e.g., catching IS 1786:2008 Fe 500D rebar specified at 12% elongation against Gazette Amendment 3 mandating min 14.5% elongation for seismic ductile detailing).
+- Formulates one-click, legally grounded corrigendum replacement text ready to paste directly into tender notices.
+
+"Don't publish yesterday's code."
+
+---
+
+## Technical Architecture Highlights
+- Deterministic Epistemic Model: Affirmation, Contradiction, Omission, Ambiguity.
+- Direct statutory grounding in the Bureau of Indian Standards Act 2016 and General Financial Rules 2017.
+- Zero-hallucination constraint verification with strict Gazette citation provenance.
+- Clean high-contrast institutional UI designed for public procurement officers.
+
+---
+
+## Artifacts & Deliverables
+- Video: C:\Projects\Mvp26108\brag-output\brag.mp4 (1080p 30fps H.264 / AAC)
+- Poster: C:\Projects\Mvp26108\brag-output\brag.jpg
+- Intro Poster: C:\Projects\Mvp26108\brag-output\brag_intro.jpg

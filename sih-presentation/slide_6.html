@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Slide 6 — Research and References</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Merriweather:wght@700;900&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #000000;
+      padding: 20px 36px 12px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* TOP HEADER (EXACT COOKEDCODERS STYLE) */
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    .team-oval {
+      border: 3.5px solid #581c87; /* Purple oval like CookedCoders */
+      border-radius: 9999px;
+      padding: 6px 36px;
+      background: #ffffff;
+      font-size: 28px;
+      font-weight: 900;
+      color: #000000;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .slide-title {
+      font-family: 'Merriweather', serif;
+      font-size: 54px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #000000;
+    }
+    .sih-logo-img {
+      height: 60px;
+      object-fit: contain;
+    }
+
+    /* MAIN 2-COLUMN SPLIT: 1270px LEFT VS 542px RIGHT */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1270px 1fr;
+      gap: 36px;
+      height: 954px;
+      margin-top: 10px;
+      flex: 1;
+    }
+
+    /* ============================================================
+       LEFT COLUMN: FULL-HEIGHT PEACH RESEARCH TABLE (COOKEDCODERS)
+       ============================================================ */
+    .left-col {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .research-table {
+      width: 100%;
+      height: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 3px solid #fb923c;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TABLE HEADER: WARM PEACH / BUFF */
+    .t-head {
+      display: grid;
+      grid-template-columns: 340px 465px 1fr;
+      background: #fed7aa; /* Soft peach / buff */
+      border-bottom: 3px solid #fdba74;
+      font-size: 26px;
+      font-weight: 900;
+      color: #000000;
+      text-align: center;
+      height: 60px;
+      flex-shrink: 0;
+    }
+    .th-cell {
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-right: 2.5px solid #fdba74;
+    }
+    .th-cell:last-child {
+      border-right: none;
+    }
+
+    /* TABLE BODY (5 MASSIVE ENLARGED ROWS) */
+    .t-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+    .t-row {
+      display: grid;
+      grid-template-columns: 340px 465px 1fr;
+      border-bottom: 2.5px solid #fed7aa;
+      flex: 1;
+      background: #fffbf2; /* Warm pale ivory/peach */
+    }
+    .t-row:nth-child(even) {
+      background: #ffffff;
+    }
+    .t-row:last-child {
+      border-bottom: none;
+    }
+
+    .td-cell {
+      padding: 18px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 2.5px solid #fed7aa;
+      font-size: 22px;
+      line-height: 1.36;
+      color: #0f172a;
+    }
+    .td-cell:last-child {
+      border-right: none;
+    }
+
+    /* CELL SPECIFIC TYPOGRAPHY (EXTRA LARGE & CRISP) */
+    .study-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #000000;
+      text-align: center;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .study-link {
+      font-size: 15px;
+      color: #0284c7;
+      text-decoration: underline;
+      text-align: center;
+      word-break: break-all;
+      display: block;
+      font-weight: 700;
+    }
+    .finding-text {
+      font-size: 22px;
+      line-height: 1.36;
+      color: #0f172a;
+    }
+    .finding-text strong {
+      font-weight: 900;
+      color: #000000;
+    }
+    .relevance-text {
+      font-size: 22px;
+      line-height: 1.36;
+      color: #0f172a;
+    }
+    .relevance-text strong {
+      font-weight: 900;
+      color: #000000;
+    }
+
+    /* ============================================================
+       RIGHT COLUMN: LARGE DATA VISUALIZATIONS & TABLE (COOKEDCODERS)
+       ============================================================ */
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    /* TOP SECTION: HUGE PIE / DONUT GRAPH */
+    .chart-section {
+      display: flex;
+      flex-direction: column;
+      height: 330px;
+      flex-shrink: 0;
+    }
+    .section-headline {
+      font-size: 24px;
+      font-weight: 900;
+      color: #000000;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    .section-subhead {
+      font-size: 14.5px;
+      color: #64748b;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .pie-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 24px;
+      margin-top: 6px;
+    }
+    .pie-svg-box {
+      width: 200px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .pie-legend {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 19px;
+      font-weight: 800;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+    .legend-block {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    /* BOTTOM SECTION: LARGE ORANGE DATA TABLE */
+    .table-section {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: flex-end;
+      margin-top: 14px;
+    }
+    .table-headline-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .table-source-link {
+      font-size: 16px;
+      color: #000000;
+      text-decoration: underline;
+      font-weight: 800;
+    }
+
+    .details-pill {
+      background: #1e293b;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 900;
+      padding: 6px 20px;
+      border-radius: 8px 8px 0 0;
+      width: fit-content;
+      margin-bottom: -1px;
+      z-index: 1;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 3px solid #ea580c;
+    }
+    .dt-head {
+      background: #f97316; /* Vibrant Orange */
+      color: #ffffff;
+      font-size: 18.5px;
+      font-weight: 900;
+    }
+    .dt-head th {
+      padding: 11px 14px;
+      text-align: left;
+      border: 1.5px solid #fdba74;
+    }
+    .dt-head th:last-child, .dt-head th:nth-child(2), .dt-head th:nth-child(3) {
+      text-align: right;
+    }
+    .dt-row {
+      background: #ffffff;
+      font-size: 18px;
+    }
+    .dt-row:nth-child(even) {
+      background: #f8fafc;
+    }
+    .dt-row td {
+      padding: 10px 14px;
+      border: 1.5px solid #cbd5e1;
+      color: #1e293b;
+    }
+    .dt-row td:last-child, .dt-row td:nth-child(2), .dt-row td:nth-child(3) {
+      text-align: right;
+      font-weight: 800;
+    }
+    .dt-domain {
+      font-weight: 900;
+      color: #000000;
+    }
+    .dt-total-row {
+      background: #ea580c; /* Deep orange */
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .dt-total-row td {
+      padding: 12px 14px;
+      border: 1.5px solid #ea580c;
+    }
+    .dt-total-row td:last-child, .dt-total-row td:nth-child(2), .dt-total-row td:nth-child(3) {
+      text-align: right;
+    }
+
+    /* FOOTER BAR (SIH OFFICIAL TEMPLATE FOOTER) */
+    .template-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 24px;
+      margin-top: 10px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .footer-center {
+      background: #0284c7;
+      color: #ffffff;
+      font-size: 13.5px;
+      font-weight: 800;
+      padding: 3px 24px;
+      border-radius: 4px;
+      margin: 0 auto;
+    }
+    .footer-page {
+      font-size: 16px;
+      font-weight: 900;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP HEADER (EXACT COOKEDCODERS STYLE) -->
+  <header class="header-bar">
+    <div class="team-oval">Parallax Nexus</div>
+    <h1 class="slide-title">RESEARCH AND REFERENCES</h1>
+    <img src="assets/sih_logo.png" class="sih-logo-img" alt="Smart India Hackathon 2025" />
+  </header>
+
+  <!-- MAIN 2-COLUMN GRID -->
+  <main class="main-grid">
+
+    <!-- LEFT COLUMN: FULL WARM PEACH RESEARCH TABLE (1270px) -->
+    <section class="left-col">
+      <div class="research-table">
+        
+        <!-- TABLE HEADER -->
+        <div class="t-head">
+          <div class="th-cell">Study</div>
+          <div class="th-cell">Key findings</div>
+          <div class="th-cell">Relevance to our project</div>
+        </div>
+
+        <!-- TABLE BODY: 5 MASSIVE ENLARGED ROWS -->
+        <div class="t-body">
+          
+          <!-- ROW 1 -->
+          <div class="t-row">
+            <div class="td-cell">
+              <span class="study-title">CVC Vigilance Manual &amp; Guidelines (2024)</span>
+              <span class="study-link">cvc.gov.in/procurement-manual</span>
+            </div>
+            <div class="td-cell">
+              <span class="finding-text">
+                <strong>Brand names in tenders are a vigilance red flag</strong> under GFR 144(i). Restricts open competition and triggers anti-corruption inquiries.
+              </span>
+            </div>
+            <div class="td-cell">
+              <span class="relevance-text">
+                <strong>Anti-monopoly enforcement &rarr;</strong> NER + 1,200+ OEM Brand Dict intercepts brand steering and mandates generic functional specs.
+              </span>
+            </div>
+          </div>
+
+          <!-- ROW 2 -->
+          <div class="t-row">
+            <div class="td-cell">
+              <span class="study-title">CAG Infrastructure Performance Audit (2023)</span>
+              <span class="study-link">cag.gov.in/infrastructure-audit</span>
+            </div>
+            <div class="td-cell">
+              <span class="finding-text">
+                <strong>Conflicting &amp; obsolete standards</strong> cause chronic disputes, generating over <strong>₹12,500+ Cr in avoidable arbitration claims</strong>.
+              </span>
+            </div>
+            <div class="td-cell">
+              <span class="relevance-text">
+                <strong>Arbitration avoidance &rarr;</strong> NetworkX Normative DAG flags superseded parent/child standards before tender notice release.
+              </span>
+            </div>
+          </div>
+
+          <!-- ROW 3 -->
+          <div class="t-row">
+            <div class="td-cell">
+              <span class="study-title">BIS Act 2016 &amp; DPIIT Gazette Registry</span>
+              <span class="study-link">bis.gov.in/qco-mandatory-registry</span>
+            </div>
+            <div class="td-cell">
+              <span class="finding-text">
+                <strong>140+ product categories</strong> require mandatory ISI marks. Non-compliance is a <strong>criminal offense under Sec 29</strong>.
+              </span>
+            </div>
+            <div class="td-cell">
+              <span class="relevance-text">
+                <strong>Statutory compliance &rarr;</strong> SQLite FTS5 Active Catalog links enforcement dates to live gazetted BIS Quality Control Orders.
+              </span>
+            </div>
+          </div>
+
+          <!-- ROW 4 -->
+          <div class="t-row">
+            <div class="td-cell">
+              <span class="study-title">MoF Manual for Works Procurement (2022)</span>
+              <span class="study-link">doe.gov.in/gfr-works-manual</span>
+            </div>
+            <div class="td-cell">
+              <span class="finding-text">
+                Manual specification review takes <strong>14&ndash;21 business days</strong>, causing bidding delays, corrigenda overhead, and re-tenders.
+              </span>
+            </div>
+            <div class="td-cell">
+              <span class="relevance-text">
+                <strong>85% audit speedup &rarr;</strong> Dual Ingestion Parser + Corrigenda Studio auto-generates gazetted redlines in sub-second time.
+              </span>
+            </div>
+          </div>
+
+          <!-- ROW 5 -->
+          <div class="t-row">
+            <div class="td-cell">
+              <span class="study-title">Formal Verification in Engineering (2024)</span>
+              <span class="study-link">arxiv.org/abs/2402.engineering-verification</span>
+            </div>
+            <div class="td-cell">
+              <span class="finding-text">
+                <strong>Pure Generative LLMs hallucinate 18&ndash;34%</strong> on quantitative engineering physical limits and standards cross-citations.
+              </span>
+            </div>
+            <div class="td-cell">
+              <span class="relevance-text">
+                <strong>Zero-hallucination thesis &rarr;</strong> SpecGuard AST Invariant Engine guarantees 100% deterministic mathematical boundary checks.
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: LARGE DATA VISUALIZATIONS & TABLE (542px) -->
+    <section class="right-col">
+
+      <!-- TOP: HUGE PIE CHART (COOKEDCODERS STYLE) -->
+      <article class="chart-section">
+        <h2 class="section-headline">Root causes of public tender specification defects</h2>
+        <div class="section-subhead">Sample: 2,400+ Central Government Tenders (CVC Telemetry)</div>
+
+        <div class="pie-row">
+          <div class="pie-svg-box">
+            <svg viewBox="0 0 100 100" width="100%" height="100%">
+              <!-- PIE SLICES (FULL 100 PIE, CENTER 50,50, RADIUS 48) -->
+              <!-- 42% Obsolete Standards (Cyan #0284c7): angle 0 to 151.2 deg -->
+              <path d="M50 50 L50 2 A48 48 0 0 1 73.1 92.1 Z" fill="#0284c7"/>
+              <!-- 28% Restrictive Brands (Rose #e11d48): angle 151.2 to 252 deg -->
+              <path d="M50 50 L73.1 92.1 A48 48 0 0 1 4.3 64.8 Z" fill="#e11d48"/>
+              <!-- 18% Normative Conflicts (Orange #f97316): angle 252 to 316.8 deg -->
+              <path d="M50 50 L4.3 64.8 A48 48 0 0 1 17.1 15.0 Z" fill="#f97316"/>
+              <!-- 12% Invariant Violations (Green #16a34a): angle 316.8 to 360 deg -->
+              <path d="M50 50 L17.1 15.0 A48 48 0 0 1 50 2 Z" fill="#16a34a"/>
+            </svg>
+          </div>
+
+          <ul class="pie-legend">
+            <li class="legend-item">
+              <span class="legend-block" style="background: #0284c7;"></span>
+              <span>Obsolete Standards: 42%</span>
+            </li>
+            <li class="legend-item">
+              <span class="legend-block" style="background: #e11d48;"></span>
+              <span>Brand Name Lock-in: 28%</span>
+            </li>
+            <li class="legend-item">
+              <span class="legend-block" style="background: #f97316;"></span>
+              <span>Normative Conflicts: 18%</span>
+            </li>
+            <li class="legend-item">
+              <span class="legend-block" style="background: #16a34a;"></span>
+              <span>Invariant Violations: 12%</span>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- BOTTOM: LARGE ORANGE DATA TABLE (EXACT COOKEDCODERS STYLE) -->
+      <article class="table-section">
+        <div class="table-headline-row">
+          <h2 class="section-headline" style="font-size: 21px; margin-bottom: 0;">Sectoral Standards Coverage (2026)</h2>
+          <span class="table-source-link">BIS Gazette &amp; GeM</span>
+        </div>
+
+        <div class="details-pill">Going into details</div>
+
+        <table class="data-table">
+          <thead>
+            <tr class="dt-head">
+              <th style="width: 50%;">Procuring Sector / Dept</th>
+              <th style="width: 17%; text-align: right;">Active IS</th>
+              <th style="width: 17%; text-align: right;">Mandatory QCO</th>
+              <th style="width: 16%; text-align: right;">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="dt-row">
+              <td class="dt-domain">MoRTH / NHAI (Highways)</td>
+              <td>840</td>
+              <td>18</td>
+              <td style="color: #15803d; font-weight: 800;">Gated (Live)</td>
+            </tr>
+            <tr class="dt-row">
+              <td class="dt-domain">CPWD / MoHUA (Buildings)</td>
+              <td>1,420</td>
+              <td>34</td>
+              <td style="color: #15803d; font-weight: 800;">Gated (Live)</td>
+            </tr>
+            <tr class="dt-row">
+              <td class="dt-domain">Indian Railways (Rolling Stock)</td>
+              <td>620</td>
+              <td>22</td>
+              <td style="color: #15803d; font-weight: 800;">Gated (Live)</td>
+            </tr>
+            <tr class="dt-row">
+              <td class="dt-domain">Jal Jeevan Mission (Water)</td>
+              <td>380</td>
+              <td>16</td>
+              <td style="color: #15803d; font-weight: 800;">Gated (Live)</td>
+            </tr>
+            <tr class="dt-row">
+              <td class="dt-domain">Power Grid / NTPC (Electrical)</td>
+              <td>510</td>
+              <td>28</td>
+              <td style="color: #15803d; font-weight: 800;">Gated (Live)</td>
+            </tr>
+            <tr class="dt-row">
+              <td class="dt-domain">MES / MoD (Defence Works)</td>
+              <td>490</td>
+              <td>20</td>
+              <td style="color: #15803d; font-weight: 800;">Gated (Live)</td>
+            </tr>
+            <tr class="dt-total-row">
+              <td>Total Public Scope</td>
+              <td>4,260</td>
+              <td>138</td>
+              <td>100% Gated</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+    </section>
+
+  </main>
+
+  <!-- BOTTOM TEMPLATE FOOTER (COOKEDCODERS STYLE) -->
+  <footer class="template-footer">
+    <div></div>
+    <div class="footer-center">@SIH Idea submission- Template</div>
+    <div class="footer-page">6</div>
+  </footer>
+
+</body>
+</html>

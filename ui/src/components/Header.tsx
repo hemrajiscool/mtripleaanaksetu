@@ -1,90 +1,125 @@
 import React from 'react';
-import { Shield, BookOpen } from 'lucide-react';
+import { Shield, FileDown, RotateCcw } from 'lucide-react';
+import type { AuditResult, GateStatus } from '../types';
+import { getDossierPdfUrl } from '../services/api';
 
 interface HeaderProps {
-  onSelectDemo?: (demoId: string) => void;
-  activeDemoId?: string;
-  onReset?: () => void;
-  onOpenCatalog?: () => void;
+  auditResult: AuditResult | null;
+  onReset: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({
-  onSelectDemo,
-  activeDemoId,
-  onReset,
-  onOpenCatalog,
-}) => {
+export const Header: React.FC<HeaderProps> = ({ auditResult, onReset }) => {
+  const getGateBadge = (status: GateStatus) => {
+    switch (status) {
+      case 'STATUTORY_NON_COMPLIANT':
+        return {
+          label: 'STATUTORY NON-COMPLIANT',
+          classes: 'bg-red-50 text-red-700 border-red-200',
+        };
+      case 'TECHNICAL_DEFECT':
+        return {
+          label: 'TECHNICAL DEFECT',
+          classes: 'bg-amber-50 text-amber-700 border-amber-200',
+        };
+      case 'ACTION_REQUIRED_REVIEW':
+        return {
+          label: 'ACTION REQUIRED: REVIEW',
+          classes: 'bg-blue-50 text-blue-700 border-blue-200',
+        };
+      case 'VERIFIED_CONFORMANT':
+      default:
+        return {
+          label: 'VERIFIED CONFORMANT',
+          classes: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        };
+    }
+  };
+
+  const gateBadge = auditResult ? getGateBadge(auditResult.gate_status) : null;
+
   return (
-    <header className="border-b border-slate-800 bg-gov-950">
+    <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Brand & Authority */}
+          {/* Brand & Statutory Authority */}
           <div className="flex items-center space-x-3 cursor-pointer" onClick={onReset}>
-            <div className="h-9 w-9 rounded border border-blue-500/40 bg-blue-950/60 flex items-center justify-center text-blue-400 font-bold">
-              <Shield className="h-5 w-5" />
+            <div className="h-9 w-9 rounded border border-slate-300 bg-slate-100 flex items-center justify-center text-slate-800 font-bold">
+              <Shield className="h-5 w-5 text-slate-700" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-semibold text-slate-100 tracking-tight text-base font-display">
+                <span className="font-semibold text-slate-900 tracking-tight text-base font-display">
                   MAANAKSETU
                 </span>
-                <span className="text-xs font-mono px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
-                  SIH26108
+                <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                  मानक सेतु
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-sans tracking-wide">
-                Bureau of Indian Standards · Sovereign Verification Workstation
+              <p className="text-[11px] text-slate-500 font-sans tracking-wide">
+                National Standards Verification Workstation · BIS Act 2016 & GFR 2017
               </p>
             </div>
           </div>
 
-          {/* Quick Demo Preseeds */}
-          <div className="hidden md:flex items-center space-x-2">
-            <span className="text-xs text-slate-400 font-mono mr-1">DEMO BENCHMARKS:</span>
-            <button
-              data-testid="demo-bridge"
-              onClick={() => onSelectDemo?.('DEMO-NHAI-BRIDGE-01')}
-              className={`text-xs px-2.5 py-1 rounded border font-mono transition-colors cursor-pointer ${
-                activeDemoId === 'DEMO-NHAI-BRIDGE-01'
-                  ? 'bg-red-950/60 border-red-500/80 text-red-300 font-medium'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white'
-              }`}
-            >
-              Bridge (IS 456)
-            </button>
-            <button
-              data-testid="demo-rebar"
-              onClick={() => onSelectDemo?.('DEMO-SEISMIC-REBAR-02')}
-              className={`text-xs px-2.5 py-1 rounded border font-mono transition-colors cursor-pointer ${
-                activeDemoId === 'DEMO-SEISMIC-REBAR-02'
-                  ? 'bg-amber-950/60 border-amber-500/80 text-amber-300 font-medium'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white'
-              }`}
-            >
-              Rebar (IS 1786)
-            </button>
-            <button
-              data-testid="demo-transformer"
-              onClick={() => onSelectDemo?.('DEMO-TRANSFORMER-QCO-03')}
-              className={`text-xs px-2.5 py-1 rounded border font-mono transition-colors cursor-pointer ${
-                activeDemoId === 'DEMO-TRANSFORMER-QCO-03'
-                  ? 'bg-purple-950/60 border-purple-500/80 text-purple-300 font-medium'
-                  : 'bg-slate-800/80 border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white'
-              }`}
-            >
-              Xfmr QCO (IS 1180)
-            </button>
-          </div>
+          {/* Active Tender & Status Context (When Audit Active) */}
+          {auditResult ? (
+            <div className="hidden md:flex items-center space-x-3 font-mono text-xs">
+              <div className="flex items-center space-x-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded">
+                <span className="text-slate-500">TENDER:</span>
+                <span className="font-semibold text-slate-800 max-w-[200px] truncate" title={auditResult.document_id}>
+                  {auditResult.document_id}
+                </span>
+              </div>
 
-          {/* Standards Catalog Nav */}
-          <div className="flex items-center space-x-3">
+              {gateBadge && (
+                <span
+                  data-testid="header-gate-badge"
+                  className={`px-2.5 py-1 rounded border font-semibold tracking-wider text-[11px] ${gateBadge.classes}`}
+                >
+                  {gateBadge.label}
+                </span>
+              )}
+
+              <div className="flex items-center space-x-2 text-slate-600">
+                <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px]">
+                  FINDINGS: <strong className="text-slate-900">{auditResult.findings.length}</strong>
+                </span>
+                <span className="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded text-[11px]">
+                  CLAUSES: <strong className="text-slate-900">{auditResult.summary.total_requirements_evaluated}</strong>
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="hidden md:flex items-center space-x-2 text-xs font-mono text-slate-500">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-600"></span>
+              <span>STANDARDS VERIFICATION ACTIVE · DETERMINISTIC</span>
+            </div>
+          )}
+
+          {/* Actions: Export & Reset */}
+          <div className="flex items-center space-x-2">
+            {auditResult && (
+              <a
+                href={getDossierPdfUrl(auditResult.document_id)}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="header-export-pdf"
+                className="flex items-center space-x-1.5 text-xs text-slate-700 bg-white hover:bg-slate-50 px-3 py-1.5 rounded border border-slate-300 font-medium transition-colors shadow-2xs cursor-pointer"
+                title="Download official publication-grade Typst PDF dossier"
+              >
+                <FileDown className="h-3.5 w-3.5 text-slate-600" />
+                <span className="hidden sm:inline">Export Dossier (PDF)</span>
+              </a>
+            )}
+
             <button
-              data-testid="btn-open-catalog"
-              onClick={() => onOpenCatalog?.()}
-              className="flex items-center space-x-1.5 text-xs text-slate-300 bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded border border-slate-700 transition-colors cursor-pointer"
+              onClick={onReset}
+              data-testid="header-btn-reset"
+              className="flex items-center space-x-1 text-xs text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded border border-slate-200 transition-colors cursor-pointer"
+              title="Reset Workstation"
             >
-              <BookOpen className="h-3.5 w-3.5 text-blue-400" />
-              <span>Standards Catalog</span>
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">Reset</span>
             </button>
           </div>
         </div>
