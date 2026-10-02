@@ -20,6 +20,7 @@ from maanaksetu.adapters.ai.config import (
     OMNIROUTE_DEFAULT_REASONING_MODEL,
     OMNIROUTE_DEFAULT_RERANKER_MODEL,
     OMNIROUTE_WORKLOAD_AGENT,
+    OMNIROUTE_WORKLOAD_CHAT,
     OMNIROUTE_WORKLOAD_FAST,
     OMNIROUTE_WORKLOAD_RAG_SYNTHESIS,
     OMNIROUTE_WORKLOAD_REASONING,
@@ -265,4 +266,42 @@ class OmniRouteClient:
         except Exception as e:
             logger.warning(f"OmniRoute reasoning request failed: {e}")
             return None
+
+    async def chat_completion(
+        self,
+        messages: List[Dict[str, str]],
+        model: str = OMNIROUTE_WORKLOAD_CHAT,
+        temperature: float = 0.2,
+        max_tokens: int = 1200,
+        timeout: float = 30.0,
+    ) -> Optional[str]:
+        """
+        Execute conversational completion using OmniRoute's chat workload.
+        Adheres to OMNIROUTE_WORKLOAD_ENGINEERING_MANUAL.md Section 3:
+        Routes to Tier 1 Frontier models with low-TTFT.
+        """
+        if not self.is_configured or not messages:
+            return None
+
+        endpoint = f"{self.base_url}/chat/completions"
+        payload = {
+            "model": model,
+            "messages": messages,
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+        }
+
+        try:
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                res = await client.post(endpoint, headers=self._headers(), json=payload)
+                if res.status_code == 200:
+                    choices = res.json().get("choices", [])
+                    if choices:
+                        return choices[0].get("message", {}).get("content", "").strip()
+                logger.warning(f"OmniRoute chat_completion error: {res.status_code} {res.text[:150]}")
+                return None
+        except Exception as e:
+            logger.warning(f"OmniRoute chat_completion request failed: {e}")
+            return None
+
 

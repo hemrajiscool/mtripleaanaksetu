@@ -8,12 +8,30 @@ import { StandardsRegimeView } from './components/StandardsRegimeView';
 import { StandardDetailModal } from './components/StandardDetailModal';
 import { AdjudicationModal } from './components/AdjudicationModal';
 import { DossierModal } from './components/DossierModal';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { PersonaGatewayModal, PERSONA_PROFILES, type PersonaProfile } from './components/PersonaGatewayModal';
+import { TelemetryStepper } from './components/TelemetryStepper';
+import { ProcurementAssistant } from './components/ProcurementAssistant';
+import { VerificationModal } from './components/VerificationModal';
+import { AlertCircle } from 'lucide-react';
+import { type Language } from './i18n';
 
 export const App: React.FC = () => {
   const [auditResult, setAuditResult] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Internationalization & Persona Gateway
+  const [language, setLanguage] = useState<Language>('en');
+  const [currentPersona, setCurrentPersona] = useState<PersonaProfile>(() => {
+    const saved = localStorage.getItem('maanaksetu_persona_id');
+    if (saved) {
+      const match = PERSONA_PROFILES.find((p) => p.id === saved);
+      if (match) return match;
+    }
+    return PERSONA_PROFILES[0];
+  });
+  const [isPersonaModalOpen, setIsPersonaModalOpen] = useState(false);
+  const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
 
   // Modals & In-situ inspection state
   const [selectedStandard, setSelectedStandard] = useState<string | null>(null);
@@ -39,7 +57,7 @@ export const App: React.FC = () => {
     }
   }, []);
 
-  // Initial load: pre-load the default benchmark tender so there is instant, convincing demo state
+  // Initial load: pre-load the default rich benchmark tender
   useEffect(() => {
     const defaultDemo = DEMO_TENDERS[0];
     executeAudit(defaultDemo.text, defaultDemo.title, defaultDemo.id);
@@ -61,6 +79,15 @@ export const App: React.FC = () => {
     setAuditResult(updatedResult);
   };
 
+  const toggleLanguage = () => {
+    setLanguage((prev) => (prev === 'en' ? 'hi' : 'en'));
+  };
+
+  const handleSelectPersona = (p: PersonaProfile) => {
+    setCurrentPersona(p);
+    localStorage.setItem('maanaksetu_persona_id', p.id);
+  };
+
   return (
     <div className="min-h-screen text-slate-900 flex flex-col font-sans selection:bg-slate-900 selection:text-white">
       {/* 1. Clean, Quiet Institutional Header */}
@@ -68,6 +95,11 @@ export const App: React.FC = () => {
         auditResult={auditResult}
         onAuditNew={handleAuditNew}
         onExportDossier={() => setIsDossierOpen(true)}
+        language={language}
+        onToggleLanguage={toggleLanguage}
+        persona={currentPersona}
+        onOpenPersonaModal={() => setIsPersonaModalOpen(true)}
+        onOpenVerifyModal={() => setIsVerifyModalOpen(true)}
       />
 
       {/* 2. Error Display */}
@@ -81,7 +113,7 @@ export const App: React.FC = () => {
             <button
               type="button"
               onClick={() => setError(null)}
-              className="text-xs font-semibold text-rose-900 hover:underline"
+              className="text-xs font-semibold text-rose-900 hover:underline cursor-pointer"
             >
               Dismiss
             </button>
@@ -92,25 +124,19 @@ export const App: React.FC = () => {
       {/* 3. Main Workspace */}
       <main className="flex-1 pb-16">
         {loading ? (
-          <div className="py-24 text-center">
-            <Loader2 className="w-8 h-8 text-slate-400 animate-spin mx-auto mb-3" />
-            <h2 className="text-sm font-semibold text-slate-800">
-              Evaluating Technical Scope & Standards Database...
-            </h2>
-            <p className="text-xs text-slate-500 mt-1">
-              Matching assertions against BIS Gazette editions, QCO orders, and GFR 2017 rules.
-            </p>
-          </div>
+          <TelemetryStepper language={language} />
         ) : auditResult ? (
           <StandardsRegimeView
             auditResult={auditResult}
             onOpenStandardDetail={(isNumber) => setSelectedStandard(isNumber)}
             onAdjudicate={(finding) => setAdjudicatingFinding(finding)}
+            language={language}
           />
         ) : (
           <DocumentIntake
             onAnalyze={handleAnalyze}
             isLoading={loading}
+            language={language}
           />
         )}
       </main>
@@ -142,7 +168,30 @@ export const App: React.FC = () => {
         />
       )}
 
-      {/* 7. Restrained Footer */}
+      {/* 7. Institutional Persona Gateway Modal */}
+      <PersonaGatewayModal
+        isOpen={isPersonaModalOpen}
+        onClose={() => setIsPersonaModalOpen(false)}
+        onSelectPersona={handleSelectPersona}
+        currentPersonaId={currentPersona.id}
+        language={language}
+      />
+
+      {/* 8. Public Cryptographic Verification Modal */}
+      <VerificationModal
+        isOpen={isVerifyModalOpen}
+        onClose={() => setIsVerifyModalOpen(false)}
+        language={language}
+        prefillDigest={auditResult?.sha256_digest}
+      />
+
+      {/* 9. Floating Procurement Assistant Copilot */}
+      <ProcurementAssistant
+        documentId={auditResult?.document_id}
+        language={language}
+      />
+
+      {/* 10. Restrained Footer */}
       <footer className="border-t border-black/20 bg-transparent py-5 text-center text-xs text-slate-900 font-medium">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
