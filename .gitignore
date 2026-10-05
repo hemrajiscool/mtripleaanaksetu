@@ -35,5 +35,9 @@ ui/dist/
 # Agent / Scratch logs
 scratch/
 .agent/
+.agents/
+.skills/
+master-cortex-implementation.md
 *.png
+
 
