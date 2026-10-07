@@ -8,6 +8,7 @@
 [![Python: 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Tailwind-61DAFB.svg)](https://react.dev)
+[![CI Pipeline](https://github.com/hemrajiscool/mtripleaanaksetu/actions/workflows/ci.yml/badge.svg)](https://github.com/hemrajiscool/mtripleaanaksetu/actions)
 [![Architecture: Neuro--Symbolic](https://img.shields.io/badge/Architecture-Neuro--Symbolic%20AST-orange.svg)](#architecture)
 [![Verification: Deterministic](https://img.shields.io/badge/Verification-Deterministic%200%25%20Hallucination-success.svg)](#statutory-verification-engine)
 
